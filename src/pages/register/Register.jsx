@@ -6,11 +6,10 @@ import "./Register.scss"; // Add styling in a separate CSS/SCSS file.
 function Register() {
   const [user, setUser] = useState({
     name: "",
-    email: "",
+    userEmail: "",
     password: "",
     phoneNumber: "",
     role: "",
-    address: "",
     location: "",
   });
 
@@ -47,7 +46,7 @@ function Register() {
         <label>Email</label>
         <input
           type="email"
-          name="email"
+          name="userEmail"
           placeholder="Enter your email"
           value={user.userEmail}
           onChange={handleChange}

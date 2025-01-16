@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import newRequest from "../../utils/newRequest";
+import axios from "axios"; // Ensure axios is imported for API requests
 import "./Navbar.scss";
 
 function Navbar() {
@@ -8,6 +8,7 @@ function Navbar() {
   const [open, setOpen] = useState(false);
 
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
@@ -22,36 +23,35 @@ function Navbar() {
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  const navigate = useNavigate();
-
   const handleLogout = async () => {
     try {
-      await newRequest.post("/auth/logout");
-      localStorage.setItem("currentUser", null);
-      navigate("/");
+      // Call the backend logout endpoint
+      await axios.post("http://localhost:8080/user/logout");
+
+      // Clear the user session from localStorage
+      localStorage.removeItem("currentUser");
+
+      // Redirect the user to the login page
+      navigate("/login");
     } catch (err) {
-      console.log(err);
+      console.error("Error during logout:", err);
     }
-  };  
+  };
 
   return (
     <div className={active || pathname !== "/" ? "navbar active" : "navbar"}>
-      
-      
       <div className="container">
         <div className="logo">
           <Link className="link" to="/">
-          
             <span className="text">auction</span>
           </Link>
           <span className="dot">.</span>
         </div>
         <div className="links">
-          
           {!currentUser?.isSeller && <span>Become a Seller</span>}
           {currentUser ? (
             <div className="user" onClick={() => setOpen(!open)}>
-              <img src={currentUser.img || "/img/noavatar.jpg"} alt="" />
+              <img src={currentUser.img || "/img/noavatar.jpg"} alt="User Avatar" />
               <span>{currentUser?.username}</span>
               {open && (
                 <div className="options">
@@ -71,15 +71,17 @@ function Navbar() {
                   <Link className="link" to="/messages">
                     Messages
                   </Link>
-                  <Link className="link" onClick={handleLogout}>
+                  <button onClick={handleLogout} className="logout-button">
                     Logout
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>
           ) : (
             <>
-              <Link to="/login" className="link">Sign in</Link>
+              <Link to="/login" className="link">
+                Sign in
+              </Link>
               <Link className="link" to="/register">
                 <button>Join</button>
               </Link>
@@ -95,7 +97,7 @@ function Navbar() {
               Coconuts
             </Link>
             <Link className="link menuLink" to="/">
-              Vegitables
+              Vegetables
             </Link>
             <Link className="link menuLink" to="/">
               Fruits
@@ -104,19 +106,10 @@ function Navbar() {
               Spices
             </Link>
             <Link className="link menuLink" to="/">
-              Fishs
+              Fish
             </Link>
             <Link className="link menuLink" to="/">
               Meat
-            </Link>
-            <Link className="link menuLink" to="/">
-            Coconuts
-            </Link>
-            <Link className="link menuLink" to="/">
-            Vegitables
-            </Link>
-            <Link className="link menuLink" to="/">
-            Fruits
             </Link>
           </div>
           <hr />
@@ -127,3 +120,4 @@ function Navbar() {
 }
 
 export default Navbar;
+
