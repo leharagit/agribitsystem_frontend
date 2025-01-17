@@ -18,6 +18,7 @@ const Add = () => {
     productQuantity: 0,
   });
 
+  const [image, setImage] = useState(null); // State to hold the image file
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -27,6 +28,10 @@ const Add = () => {
     if (errors[name]) {
       setErrors({ ...errors, [name]: "" });
     }
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]); // Update image state
   };
 
   const validate = () => {
@@ -49,13 +54,16 @@ const Add = () => {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("product", JSON.stringify(product)); // Append product data as JSON string
+    if (image) {
+      formData.append("image", image); // Append image file if available
+    }
+
     try {
       const response = await fetch("http://localhost:8080/api/products", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
+        body: formData, // Send multipart form data
       });
 
       if (response.ok) {
@@ -134,6 +142,17 @@ const Add = () => {
             {errors.category && <span className="error">{errors.category}</span>}
           </div>
 
+          <div className="form-group">
+            <label htmlFor="image">Upload Image</label>
+            <input
+              type="file"
+              name="image"
+              id="image"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </div>
+
           <button type="submit">Create Product</button>
         </form>
       </div>
@@ -142,5 +161,3 @@ const Add = () => {
 };
 
 export default Add;
-
-

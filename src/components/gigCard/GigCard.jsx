@@ -6,7 +6,7 @@ function GigCard({ item }) {
   return (
     <Link to={`/gig/${item.id}`} className="gigCard">
       <div className="gigCard">
-        <img src={item.image || "/img/auction.png"} alt={item.name} />
+        <img src={item.image} alt={item.name} />
         <div className="info">
           <h2>Iteam:   {item.name}</h2>
           <h2>ProductId:   {item.productId}</h2>
