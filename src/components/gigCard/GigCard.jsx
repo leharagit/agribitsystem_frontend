@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 function GigCard({ item }) {
   return (
-    <Link to={`/gig/${item.id}`} className="gigCard">
+    <Link to={`/description/${item.productId}`} className="gigCard">
       <div className="gigCard">
       <img
                   src={`data:${item.contentType};base64,${item.image}`}
