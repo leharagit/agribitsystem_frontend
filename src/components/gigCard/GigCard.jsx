@@ -6,7 +6,12 @@ function GigCard({ item }) {
   return (
     <Link to={`/gig/${item.id}`} className="gigCard">
       <div className="gigCard">
-        <img src={item.image} alt={item.name} />
+      <img
+                  src={`data:${item.contentType};base64,${item.image}`}
+                  alt={item.name}
+                  className="img-fluid"
+                  style={{ height: "280px", width: "100%" }}
+                />
         <div className="info">
           <h2>Iteam:   {item.name}</h2>
           <h2>ProductId:   {item.productId}</h2>
