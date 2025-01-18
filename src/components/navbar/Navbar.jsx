@@ -10,6 +10,7 @@ function Navbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  // Function to check if the Navbar should be active
   const isActive = () => {
     window.scrollY > 0 ? setActive(true) : setActive(false);
   };
@@ -21,8 +22,10 @@ function Navbar() {
     };
   }, []);
 
+  // Retrieve the current user from localStorage
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
+  // Logout function
   const handleLogout = async () => {
     try {
       // Call the backend logout endpoint
@@ -51,9 +54,14 @@ function Navbar() {
           {currentUser ? (
             <div className="user" onClick={() => setOpen(!open)}>
               <img src={currentUser.img || "/img/noavatar.jpg"} alt="User Avatar" />
-              <span>{currentUser?.username} ({currentUser?.role})</span>
+              <span>
+                {currentUser?.username} ({currentUser?.role})
+              </span>
               {open && (
                 <div className="options">
+                  <p className="user-id">
+                    <strong>Your ID:</strong> {currentUser.id}
+                  </p>
                   {currentUser.role === "Seller" && (
                     <>
                       <Link className="link" to="/mygigs">
@@ -125,5 +133,6 @@ function Navbar() {
 }
 
 export default Navbar;
+
 
 

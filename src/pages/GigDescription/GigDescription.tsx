@@ -111,12 +111,12 @@ function GigDescription() {
             <h2 className="section-title">Create a New Bid</h2>
             <form onSubmit={handleSubmit} className="bid-form">
               <div className="form-group">
-                <label htmlFor="userId">User ID</label>
+                <label htmlFor="userId">Enter Your Phone number</label>
                 <input
                   type="text"
                   name="userId"
                   id="userId"
-                  placeholder="Enter User ID"
+                  placeholder="07XXXXXXXX"
                   value={bid.userId}
                   onChange={handleChange}
                   required

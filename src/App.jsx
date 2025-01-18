@@ -86,7 +86,7 @@ function App() {
           element: <Login />,
         },
         {
-          path: "/pay/:id",
+          path: "/pay",
           element: <Pay />,
         },
         {
