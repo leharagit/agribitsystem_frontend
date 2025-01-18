@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios"; // Ensure axios is imported for API requests
+import axios from "axios";
 import "./Navbar.scss";
 
 function Navbar() {
@@ -48,14 +48,13 @@ function Navbar() {
           <span className="dot">.</span>
         </div>
         <div className="links">
-          {!currentUser?.isSeller && <span>Become a Seller</span>}
           {currentUser ? (
             <div className="user" onClick={() => setOpen(!open)}>
               <img src={currentUser.img || "/img/noavatar.jpg"} alt="User Avatar" />
-              <span>{currentUser?.username}</span>
+              <span>{currentUser?.username} ({currentUser?.role})</span>
               {open && (
                 <div className="options">
-                  {currentUser.isSeller && (
+                  {currentUser.role === "Seller" && (
                     <>
                       <Link className="link" to="/mygigs">
                         Gigs
@@ -65,9 +64,15 @@ function Navbar() {
                       </Link>
                     </>
                   )}
-                  <Link className="link" to="/orders">
-                    Orders
-                  </Link>
+                  {currentUser.role === "Farmer" ? (
+                    <Link className="link" to="/orders">
+                      Orders
+                    </Link>
+                  ) : currentUser.role === "Buyer" ? (
+                    <Link className="link" to="/gigs">
+                      Gigs
+                    </Link>
+                  ) : null}
                   <Link className="link" to="/messages">
                     Messages
                   </Link>
@@ -94,19 +99,19 @@ function Navbar() {
           <hr />
           <div className="menu">
             <Link className="link menuLink" to="/">
-             Home
+              Home
             </Link>
             <Link className="link menuLink" to="/add">
               List Your Product
             </Link>
             <Link className="link menuLink" to="/">
-              See Our Product 
+              See Our Product
             </Link>
             <Link className="link menuLink" to="/message">
-              Massage
+              Message
             </Link>
             <Link className="link menuLink" to="/">
-              Buy product
+              Buy Product
             </Link>
             <Link className="link menuLink" to="/">
               Review
@@ -120,4 +125,5 @@ function Navbar() {
 }
 
 export default Navbar;
+
 
