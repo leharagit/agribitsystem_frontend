@@ -2,48 +2,121 @@ import React, { useEffect, useState } from "react";
 import "./Pay.scss";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import newRequest from "../../utils/newRequest";
 import { useParams } from "react-router-dom";
 import CheckoutForm from "../../components/checkoutForm/CheckoutForm";
 
-const stripePromise = loadStripe(
-  "paste your public key"
-);
+// Load Stripe with your public key
+const stripePromise = loadStripe("paste your public key");
 
 const Pay = () => {
   const [clientSecret, setClientSecret] = useState("");
+  const [payment, setPayment] = useState(null); // Store payment details from the backend
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const { id } = useParams();
+  const { id } = useParams(); // `id` is the Payment ID from the URL params
 
   useEffect(() => {
-    const makeRequest = async () => {
+    const fetchPaymentDetails = async () => {
       try {
-        const res = await newRequest.post(
-          `/orders/create-payment-intent/${id}`
+        // Fetch payment details from the backend
+        const response = await fetch(`http://localhost:8080/api/payments/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch payment details");
+        }
+        const data = await response.json();
+        setPayment(data);
+
+        // Create a payment intent via your backend
+        const intentResponse = await fetch(
+          `http://localhost:8080/api/payments/${id}/create-payment-intent`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ totalAmount: data.totalAmount }),
+          }
         );
-        setClientSecret(res.data.clientSecret);
+        if (!intentResponse.ok) {
+          throw new Error("Failed to create payment intent");
+        }
+        const intentData = await intentResponse.json();
+        setClientSecret(intentData.clientSecret); // Set Stripe client secret
       } catch (err) {
-        console.log(err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
-    makeRequest();
-  }, []);
 
+    if (id) fetchPaymentDetails();
+  }, [id]);
+
+  // Stripe Elements appearance configuration
   const appearance = {
-    theme: 'stripe',
+    theme: "stripe",
+    variables: {
+      colorPrimary: "#1dbf73",
+      fontFamily: "Arial, sans-serif",
+    },
   };
+
   const options = {
     clientSecret,
     appearance,
   };
 
-  return <div className="pay">
-    {clientSecret && (
+  if (loading) {
+    return (
+      <div className="pay d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="pay d-flex justify-content-center align-items-center vh-100">
+        <div className="alert alert-danger">
+          <strong>Error:</strong> {error}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="pay">
+      {payment && (
+        <div className="payment-details mb-4 text-center">
+          <h2>Payment Details</h2>
+          <p>
+            <strong>Transaction ID:</strong> {payment.transactionId}
+          </p>
+          <p>
+            <strong>Total Amount:</strong> ${payment.totalAmount}
+          </p>
+          <p>
+            <strong>Payment Method:</strong> {payment.paymentMethod}
+          </p>
+          <p>
+            <strong>Payment Status:</strong>{" "}
+            <span className={payment.paymentStatus === "Completed" ? "text-success" : "text-warning"}>
+              {payment.paymentStatus}
+            </span>
+          </p>
+        </div>
+      )}
+      {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm />
         </Elements>
       )}
-  </div>;
+    </div>
+  );
 };
 
 export default Pay;
+
