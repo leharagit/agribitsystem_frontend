@@ -104,7 +104,7 @@ function Navbar() {
             <Link className="link menuLink" to="/add">
               List Your Product
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/orders">
               See Our Product
             </Link>
             <Link className="link menuLink" to="/message">

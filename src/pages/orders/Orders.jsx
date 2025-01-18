@@ -10,7 +10,7 @@ const Orders = () => {
     // Fetch bids from the backend
     const fetchBids = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/bids"); // Replace with your backend URL
+        const response = await fetch("http://localhost:8080/api/bids/product/5"); // Replace with your backend URL
         if (!response.ok) {
           throw new Error("Failed to fetch bids");
         }
@@ -40,21 +40,21 @@ const Orders = () => {
       <table border="1">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Product ID</th>
             <th>User ID</th>
             <th>Bid Amount</th>
             <th>Quantity</th>
+            <th>Total Amount</th>
           </tr>
         </thead>
         <tbody>
           {bids.map((bid) => (
             <tr key={bid.id}>
-              <td>{bid.id}</td>
               <td>{bid.productId}</td>
               <td>{bid.userId}</td>
               <td>{bid.bidAmount}</td>
               <td>{bid.quantity}</td>
+              <td>{bid.totalAmount}</td>
             </tr>
           ))}
         </tbody>
@@ -64,6 +64,7 @@ const Orders = () => {
 };
 
 export default Orders;
+
 
 
 
