@@ -20,10 +20,20 @@ function Login() {
       });
 
       // Save the returned user data in localStorage
-      localStorage.setItem("currentUser", JSON.stringify(res.data));
+      const userData = res.data;
+      localStorage.setItem("currentUser", JSON.stringify(userData));
 
-      // Redirect to the desired route after successful login
-      navigate("/add");
+      // Check user role and navigate accordingly
+      const userRole = userData.role;
+      if (userRole === "Farmer") {
+        navigate("/add"); // Navigate to Add section for Farmers
+      } else if (userRole === "Buyer") {
+        navigate("/gigs"); // Navigate to Gigs section for Buyers
+      } else if (userRole === "Admin") {
+        navigate("/admin"); // Navigate to Admin section for Admins
+      } else {
+        throw new Error("Invalid role."); // Handle unexpected roles
+      }
     } catch (err) {
       // Set the error message if login fails
       setError(err.response?.data || "An error occurred while logging in.");
@@ -61,3 +71,4 @@ function Login() {
 }
 
 export default Login;
+

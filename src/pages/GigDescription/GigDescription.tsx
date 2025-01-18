@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./GigDescription.scss";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import "bootstrap/dist/css/bootstrap.min.css";
+
+
 
 interface Product {
   name: string;
@@ -87,73 +92,71 @@ function GigDescription() {
     <div className="gig-description">
       {product ? (
         <>
-          <h1>{product.name}</h1>
-          <img
-            src={`data:${product.contentType};base64,${product.image}`}
-            alt={product.name}
-            className="img-fluid"
-            style={{ height: "280px", width: "40%" }}
-          />
-          <p>{product.description}</p>
-          <span>Price: ${product.startBidPrice}</span>
-          <span>Quantity: {product.quantity}</span>
-          <span>Quality: {product.quality}</span>
-
-          <div className="add">
-            <div className="container">
-              <h1>Create a New Bid</h1>
-              <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                  <label htmlFor="userId">User ID</label>
-                  <input
-                    type="text"
-                    name="userId"
-                    id="userId"
-                    placeholder="Enter User ID"
-                    value={bid.userId}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="bidAmount">Bid Amount</label>
-                  <input
-                    type="number"
-                    name="bidAmount"
-                    id="bidAmount"
-                    placeholder="Enter Bid Amount"
-                    value={bid.bidAmount}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="quantity">Quantity</label>
-                  <input
-                    type="number"
-                    name="quantity"
-                    id="quantity"
-                    placeholder="Enter Quantity"
-                    value={bid.quantity}
-                    onChange={handleChange}
-                    min="1"
-                    required
-                  />
-                </div>
-
-                <button type="submit">Submit Bid</button>
-              </form>
+          <div className="product-display">
+            <img
+              src={`data:${product.contentType};base64,${product.image}`}
+              alt={product.name}
+              className="product-image"
+            />
+            <div className="product-details">
+              <h1 className="product-title">{product.name}</h1>
+              <p className="product-description">{product.description}</p>
+              <span className="product-price">Starting Price: ${product.startBidPrice}</span>
+              <span className="product-quantity">Available Quantity: {product.quantity}</span>
+              <span className="product-quality">Quality: {product.quality}</span>
             </div>
           </div>
 
+          <div className="bid-section">
+            <h2 className="section-title">Create a New Bid</h2>
+            <form onSubmit={handleSubmit} className="bid-form">
+              <div className="form-group">
+                <label htmlFor="userId">User ID</label>
+                <input
+                  type="text"
+                  name="userId"
+                  id="userId"
+                  placeholder="Enter User ID"
+                  value={bid.userId}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="bidAmount">Bid Amount</label>
+                <input
+                  type="number"
+                  name="bidAmount"
+                  id="bidAmount"
+                  placeholder="Enter Bid Amount"
+                  value={bid.bidAmount}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="quantity">Quantity</label>
+                <input
+                  type="number"
+                  name="quantity"
+                  id="quantity"
+                  placeholder="Enter Quantity"
+                  value={bid.quantity}
+                  onChange={handleChange}
+                  min="1"
+                  required
+                />
+              </div>
+              <button type="submit" className="submit-button">Submit Bid</button>
+            </form>
+          </div>
+
           <div className="bid-list">
-            <h2>Existing Bids</h2>
+            <h2 className="section-title">Existing Bids</h2>
             {bids.length > 0 ? (
               <ul>
                 {bids.map((b) => (
-                  <li key={b.productId}>
+                  <li key={b.productId} className="bid-item">
                     User: {b.userId}, Bid: ${b.bidAmount}, Quantity: {b.quantity}
                   </li>
                 ))}

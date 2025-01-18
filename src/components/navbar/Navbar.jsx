@@ -94,22 +94,22 @@ function Navbar() {
           <hr />
           <div className="menu">
             <Link className="link menuLink" to="/">
-              Coconuts
+             Home
+            </Link>
+            <Link className="link menuLink" to="/add">
+              List Your Product
             </Link>
             <Link className="link menuLink" to="/">
-              Vegetables
+              See Our Product 
+            </Link>
+            <Link className="link menuLink" to="/message">
+              Massage
             </Link>
             <Link className="link menuLink" to="/">
-              Fruits
+              Buy product
             </Link>
             <Link className="link menuLink" to="/">
-              Spices
-            </Link>
-            <Link className="link menuLink" to="/">
-              Fish
-            </Link>
-            <Link className="link menuLink" to="/">
-              Meat
+              Review
             </Link>
           </div>
           <hr />

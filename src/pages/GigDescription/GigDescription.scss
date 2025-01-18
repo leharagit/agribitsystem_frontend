@@ -1,46 +1,194 @@
 .gig-description {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    margin: 20px auto;
-    font-family: Arial, sans-serif;
-    color: #333;
-  
-    h1 {
-      font-size: 24px;
-      font-weight: bold;
-      color: #222;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-  
-    img {
-      border-radius: 8px;
-      margin-bottom: 15px;
-    }
-  
-    p {
-      font-size: 16px;
-      line-height: 1.5;
-      margin: 10px 0;
-      color: #555;
-      text-align: center;
-    }
-  
-    span {
-      display: block;
-      font-size: 14px;
-      color: #666;
-      margin-top: 5px;
-  
-      &:first-child {
-        margin-top: 15px;
-      }
-    }
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  max-width: 1000px;
+  margin: 50px auto;
+  background: linear-gradient(135deg, #ffffff, #f7f9fc);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  gap: 20px;
+}
+
+.left-section,
+.right-section {
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.left-section {
+  text-align: center;
+}
+
+.left-section img {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 16px;
+  border: 2px solid #eef2f5;
+  margin-bottom: 20px;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.left-section img:hover {
+  transform: scale(1.07);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.left-section h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.left-section p {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #607d8b;
+  margin: 15px 0;
+}
+
+.left-section .details span {
+  display: block;
+  font-size: 18px;
+  color: #455a64;
+  margin-top: 10px;
+}
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-section {
+  background-color: #e3f2fd;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-section h2 {
+  font-size: 26px;
+  font-weight: bold;
+  color: #1a237e;
+  margin-bottom: 20px;
+}
+
+.form-section .form-group {
+  margin-bottom: 20px;
+}
+
+.form-section .form-group label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #3f51b5;
+  margin-bottom: 10px;
+}
+
+.form-section .form-group input {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border: 2px solid #bbdefb;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-section .form-group input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 6px rgba(25, 118, 210, 0.4);
+}
+
+.form-section button {
+  width: 100%;
+  background: linear-gradient(135deg, #64b5f6, #2196f3);
+  color: #fff;
+  border: none;
+  padding: 14px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.form-section button:hover {
+  background: linear-gradient(135deg, #42a5f5, #1e88e5);
+  transform: scale(1.03);
+}
+
+.bid-section {
+  background-color: #f0f4f800;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.bid-section h2 {
+  font-size: 26px;
+  font-weight: bold;
+  color: #37474f;
+  margin-bottom: 20px;
+}
+
+.bid-form .form-group {
+  margin-bottom: 20px;
+}
+
+.bid-form .form-group label {
+  font-size: 16px;
+  color: #546e7a;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.bid-form .form-group input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #cfd8dc;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.bid-form .form-group input:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 5px rgba(25, 118, 210, 0.5);
+}
+
+.bid-form button {
+  display: block;
+  width: 100%;
+  background: linear-gradient(45deg, #35a519, #022d0b);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bid-form button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
