@@ -17,6 +17,9 @@ function Home() {
   const ButtonClick = () => {
     navigate("/add");
   };
+  const ButtonClick1 = () => {
+    navigate("/order");
+  };
 
   return (
     <div className="home">
@@ -87,8 +90,11 @@ function Home() {
               <img src="./img/check.png" alt="Checkmark" />
               Secure payments and trusted buyers.
             </div>
-           
-              <button onClick={ButtonClick}>List Your Product</button>
+            <div className="d-flex justify-content-between">
+            <button onClick={ButtonClick}>List Your Product</button>
+            <button onClick={ButtonClick1}>See Product Bids</button>
+    </div>
+             
             
           </div>
           <div className="item">
@@ -117,6 +123,9 @@ function Home() {
               Flexible delivery or pickup options tailored to your convenience.
             </div>
             <button onClick={handleButtonClick}>Buy Your Product</button>
+
+            
+
           </div>
           <div className="item">
             <img src="./img/buy1.png" alt="Buy Products" />
