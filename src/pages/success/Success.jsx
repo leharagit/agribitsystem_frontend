@@ -25,8 +25,7 @@ const Success = () => {
 
   return (
     <div>
-      Payment successful. You are being redirected to the orders page. Please do
-      not close the page
+      <h1>Costomer reiews</h1>
     </div>
   );
 };

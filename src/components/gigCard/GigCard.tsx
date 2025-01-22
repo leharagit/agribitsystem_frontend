@@ -34,7 +34,7 @@ const GigCard: React.FC<GigCardProps> = ({ item }) => {
         <div className="info">
           <h2 className="product-name">Item: {item.name}</h2>
           <h3 className="product-id">Product ID: {item.productId}</h3>
-          <h3 className="product-price">Min Bid Price: ${item.startBidPrice}</h3>
+          <h3 className="product-price">Min Bid Price: LKR{item.startBidPrice}</h3>
           <span className="product-category">Category: {item.category}</span>
           <h4
             className={`status ${

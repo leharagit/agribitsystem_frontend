@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Register.scss"; // Add styling in a separate CSS/SCSS file.
 
-function Register() {
+const Register = () => {
   const [user, setUser] = useState({
     name: "",
     userEmail: "",
@@ -13,14 +13,14 @@ function Register() {
     location: "",
   });
 
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:8080/user/register", user);
@@ -71,8 +71,8 @@ function Register() {
         />
         <label>Role</label>
         <select
-          name="userRole"
-          value={user.userRole}
+          name="role"
+          value={user.role}
           onChange={handleChange}
           required
         >
@@ -94,7 +94,8 @@ function Register() {
       </form>
     </div>
   );
-}
- 
+};
+
 export default Register;
+
 

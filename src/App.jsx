@@ -93,6 +93,7 @@ function App() {
           path: "/success",
           element: <Success />,
         },
+        
         {
           path: "/description/:productId",
           element: <GigDescription />,

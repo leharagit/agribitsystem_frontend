@@ -3,9 +3,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Navbar.scss";
 
-function Navbar() {
-  const [active, setActive] = useState(false);
-  const [open, setOpen] = useState(false);
+interface User {
+  id: string;
+  username: string;
+  role: "Seller" | "Buyer" | "Farmer";
+  img?: string;
+}
+
+const Navbar: React.FC = () => {
+  const [active, setActive] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -23,7 +30,7 @@ function Navbar() {
   }, []);
 
   // Retrieve the current user from localStorage
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const currentUser: User | null = JSON.parse(localStorage.getItem("currentUser") || "null");
 
   // Logout function
   const handleLogout = async () => {
@@ -113,15 +120,15 @@ function Navbar() {
               List Your Product
             </Link>
             <Link className="link menuLink" to="/orders">
-              See Our Product
+              See Bids 
             </Link>
             <Link className="link menuLink" to="/message">
               Message
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/gigs">
               Buy Product
             </Link>
-            <Link className="link menuLink" to="/">
+            <Link className="link menuLink" to="/review">
               Review
             </Link>
           </div>
@@ -130,9 +137,10 @@ function Navbar() {
       )}
     </div>
   );
-}
+};
 
 export default Navbar;
+
 
 
 
