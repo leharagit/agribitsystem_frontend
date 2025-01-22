@@ -83,9 +83,9 @@ const Orders: React.FC = () => {
           <div className="alert alert-info text-center">
             <h4>Max Total Amount Bid for Product ID: {productId}</h4>
             <p>
-              <strong>User Phone Number:</strong> {maxTotalAmountBid.productId},{" "}
-              <strong>User ID:</strong> {maxTotalAmountBid.userId},{" "}
-              <strong>Total Amount:</strong> {maxTotalAmountBid.totalAmount}
+              <strong>Product ID:</strong> {maxTotalAmountBid.productId},{" "}
+              <strong>User Phone Number:</strong> {maxTotalAmountBid.userId},{" "}
+              <strong>Total Amount:</strong>LKR {maxTotalAmountBid.totalAmount}
             </p>
           </div>
         )}
@@ -94,7 +94,7 @@ const Orders: React.FC = () => {
             <thead className="table-dark">
               <tr>
                 <th>Product ID</th>
-                <th>User ID</th>
+                <th>User Phone Number</th>
                 <th>Bid Amount</th>
                 <th>Quantity</th>
                 <th>Total Amount</th>
@@ -105,9 +105,9 @@ const Orders: React.FC = () => {
                 <tr key={bid.id}>
                   <td>{bid.productId}</td>
                   <td>{bid.userId}</td>
-                  <td>${bid.bidAmount}</td>
+                  <td>LKR{bid.bidAmount}</td>
                   <td>{bid.quantity}</td>
-                  <td>${bid.totalAmount}</td>
+                  <td>LKR{bid.totalAmount}</td>
                 </tr>
               ))}
             </tbody>
