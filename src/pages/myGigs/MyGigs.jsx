@@ -40,7 +40,7 @@ const MyGigs = () => {
   return (
     <div className="my-gigs">
       <div className="container">
-        <h1>My Projects</h1>
+        <h1>Product ditails</h1>
         <button className="add-new" onClick={() => navigate("/add")}>
           Add New Project
         </button>

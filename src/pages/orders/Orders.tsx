@@ -19,17 +19,16 @@ interface MaxTotalAmountBid {
 }
 
 const Orders: React.FC = () => {
-  const [bids, setBids] = useState<Bid[]>([]); // State to hold bid data
-  const [maxTotalAmountBid, setMaxTotalAmountBid] = useState<MaxTotalAmountBid | null>(null); // State to hold max total amount bid for a product
-  const [loading, setLoading] = useState<boolean>(true); // State to handle loading state
-  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const [bids, setBids] = useState<Bid[]>([]); 
+  const [maxTotalAmountBid, setMaxTotalAmountBid] = useState<MaxTotalAmountBid | null>(null); 
+  const [loading, setLoading] = useState<boolean>(true); 
+  const [error, setError] = useState<string | null>(null); 
 
-  const { productId } = useParams(); // Get the productId from URL
+  const { productId } = useParams(); 
 
   useEffect(() => {
     const fetchBidsAndMaxBid = async () => {
       try {
-        // Fetch all bids for the specified product
         const response = await fetch(`http://localhost:8080/api/bids/product/${productId}`);
         if (!response.ok) {
           throw new Error("Failed to fetch bids for the product");
@@ -37,7 +36,6 @@ const Orders: React.FC = () => {
         const data: Bid[] = await response.json();
         setBids(data);
 
-        // Fetch the max total amount bid for the product
         const maxBidResponse = await fetch(`http://localhost:8080/api/bids/max-total/${productId}`);
         if (!maxBidResponse.ok) {
           throw new Error("Failed to fetch max total amount bid for the product");
@@ -55,6 +53,28 @@ const Orders: React.FC = () => {
       fetchBidsAndMaxBid();
     }
   }, [productId]);
+
+  // New function to export bids to CSV
+  const exportToCSV = () => {
+    // Convert bids to CSV format
+    const csvContent = [
+      "Bid ID,Product ID,User Phone Number,Bid Amount,Quantity,Total Amount",
+      ...bids.map(bid => 
+        `${bid.id},${bid.productId},${bid.userId},${bid.bidAmount},${bid.quantity},${bid.totalAmount}`
+      )
+    ].join("\n");
+
+    // Create a Blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `bids_${productId}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   if (loading) {
     return (
@@ -77,8 +97,15 @@ const Orders: React.FC = () => {
   return (
     <div className="orders d-flex justify-content-center align-items-center">
       <div className="container shadow-lg rounded p-4 bg-white">
-        <div className="title">
+        <div className="title d-flex justify-content-between align-items-center">
           <h1>Bids List for Product ID: {productId}</h1>
+          <button 
+            className="btn btn-success" 
+            onClick={exportToCSV}
+            disabled={bids.length === 0}
+          >
+            Export to CSV
+          </button>
         </div>
         {maxTotalAmountBid && (
           <div className="alert alert-info text-center">

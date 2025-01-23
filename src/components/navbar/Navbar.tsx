@@ -119,7 +119,7 @@ const Navbar: React.FC = () => {
             <Link className="link menuLink" to="/add">
               List Your Product
             </Link>
-            <Link className="link menuLink" to="/orders">
+            <Link className="link menuLink" to="/myGigs">
               See Bids 
             </Link>
             <Link className="link menuLink" to="/message">
