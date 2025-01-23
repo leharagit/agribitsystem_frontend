@@ -89,13 +89,13 @@ const App: React.FC = () => {
         {
           path: "/myGigs",
           element: (
-            <ProtectedRoute roles={[ROLES.BUYER, ROLES.FARMER]}>
+            <ProtectedRoute roles={[ROLES.FARMER]}>
               <MyGigs />
             </ProtectedRoute>
           ),
         },
         {
-          path: "/orders",
+          path: "/orders/:productId",
           element: (
             <ProtectedRoute roles={[ROLES.FARMER]}>
               <Orders />

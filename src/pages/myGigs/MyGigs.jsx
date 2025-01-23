@@ -69,6 +69,9 @@ const MyGigs = () => {
                   <td>${project.buyNowPrice}</td>
                   <td>{project.status}</td>
                   <td>
+                    <button onClick={() => navigate(`/orders/${project.productId}`)}>
+                      View Bids
+                    </button>
                     <button onClick={() => navigate(`/edit/${project.productId}`)}>Edit</button>
                     <button onClick={() => handleDelete(project.productId)}>Delete</button>
                   </td>
@@ -85,6 +88,7 @@ const MyGigs = () => {
 };
 
 export default MyGigs;
+
 
 
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Orders.scss";
 
-// Define types for the bid and max total amount bid data
 interface Bid {
   id: string;
   productId: string;
@@ -24,7 +24,7 @@ const Orders: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true); // State to handle loading state
   const [error, setError] = useState<string | null>(null); // State to handle errors
 
-  const productId = "5"; // Replace with dynamic product ID if needed
+  const { productId } = useParams(); // Get the productId from URL
 
   useEffect(() => {
     const fetchBidsAndMaxBid = async () => {
@@ -51,7 +51,9 @@ const Orders: React.FC = () => {
       }
     };
 
-    fetchBidsAndMaxBid();
+    if (productId) {
+      fetchBidsAndMaxBid();
+    }
   }, [productId]);
 
   if (loading) {
@@ -76,16 +78,15 @@ const Orders: React.FC = () => {
     <div className="orders d-flex justify-content-center align-items-center">
       <div className="container shadow-lg rounded p-4 bg-white">
         <div className="title">
-          <h1>Bids List</h1>
-          <button className="btn btn-success">Export Data</button>
+          <h1>Bids List for Product ID: {productId}</h1>
         </div>
         {maxTotalAmountBid && (
           <div className="alert alert-info text-center">
-            <h4>Max Total Amount Bid for Product ID: {productId}</h4>
+            <h4>Max Total Amount Bid</h4>
             <p>
               <strong>Product ID:</strong> {maxTotalAmountBid.productId},{" "}
               <strong>User Phone Number:</strong> {maxTotalAmountBid.userId},{" "}
-              <strong>Total Amount:</strong>LKR {maxTotalAmountBid.totalAmount}
+              <strong>Total Amount:</strong> LKR {maxTotalAmountBid.totalAmount}
             </p>
           </div>
         )}
@@ -105,9 +106,9 @@ const Orders: React.FC = () => {
                 <tr key={bid.id}>
                   <td>{bid.productId}</td>
                   <td>{bid.userId}</td>
-                  <td>LKR{bid.bidAmount}</td>
+                  <td>LKR {bid.bidAmount}</td>
                   <td>{bid.quantity}</td>
-                  <td>LKR{bid.totalAmount}</td>
+                  <td>LKR {bid.totalAmount}</td>
                 </tr>
               ))}
             </tbody>
