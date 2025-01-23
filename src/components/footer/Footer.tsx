@@ -1,7 +1,7 @@
 import React from "react";
 import "./Footer.scss";
 
-function Footer() {
+const Footer: React.FC = () => {
   return (
     <div className="footer">
       <div className="container">
@@ -14,7 +14,6 @@ function Footer() {
             <span>Fish</span>
             <span>Meat</span>
             <span>Coconuts</span>
-          
           </div>
           <div className="item">
             <h2>About</h2>
@@ -48,7 +47,7 @@ function Footer() {
             <span>Community Standards</span>
           </div>
           <div className="item">
-            <h2>Locasions</h2>
+            <h2>Locations</h2>
             <span>Colombo</span>
             <span>Kurunagala</span>
             <span>Gampaha</span>
@@ -69,23 +68,22 @@ function Footer() {
           </div>
           <div className="right">
             <div className="social">
-              <img src="/img/twitter.png" alt="" />
-              <img src="/img/facebook.png" alt="" />
-              <img src="/img/linkedin.png" alt="" />
-              <img src="/img/pinterest.png" alt="" />
-              <img src="/img/instagram.png" alt="" />
+              <img src="/img/twitter.png" alt="Twitter" />
+              <img src="/img/facebook.png" alt="Facebook" />
+              <img src="/img/linkedin.png" alt="LinkedIn" />
+              <img src="/img/pinterest.png" alt="Pinterest" />
+              <img src="/img/instagram.png" alt="Instagram" />
             </div>
-           
             <div className="link">
-              <img src="/img/coin.png" alt="" />
+              <img src="/img/coin.png" alt="Currency" />
               <span>LKR</span>
             </div>
-            <img src="/img/accessibility.png" alt="" />
+            <img src="/img/accessibility.png" alt="Accessibility" />
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Footer;

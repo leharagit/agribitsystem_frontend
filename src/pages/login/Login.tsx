@@ -1,33 +1,35 @@
+// Login.tsx
 import React, { useState } from "react";
 import "./Login.scss";
-import axios from "axios"; // Import axios for HTTP requests
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "./UserContext";
 
-function Login() {
-  const [userEmail, setUserEmail] = useState(""); // State for email
-  const [password, setPassword] = useState(""); // State for password
-  const [error, setError] = useState<string | null>(null); // State for error messages
-  const [isLoading, setIsLoading] = useState(false); // State for loading indicator
+const Login: React.FC = () => {
+  const [userEmail, setUserEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { setCurrentUser } = useUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent form submission
-    setIsLoading(true); // Start loading
-    setError(null); // Clear previous errors
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
 
     try {
-      // Make a POST request to the login endpoint
       const res = await axios.post("http://localhost:8080/user/login", {
         userEmail,
         password,
       });
 
-      // Save the returned user data in localStorage
       const userData = res.data;
+
+      setCurrentUser(userData);
       localStorage.setItem("currentUser", JSON.stringify(userData));
 
-      // Check user role and navigate accordingly
       const userRole = userData.role;
       switch (userRole) {
         case "Farmer":
@@ -43,16 +45,15 @@ function Login() {
           throw new Error("Invalid user role. Please contact support.");
       }
     } catch (err: any) {
-      // Handle different types of errors
       if (err.response) {
-        setError(err.response.data.message || "Invalid credentials. Please try again.");
+        setError(err.response.data.message || "Invalid credentials.");
       } else if (err.request) {
-        setError("Unable to connect to the server. Please check your network.");
+        setError("Unable to connect to the server.");
       } else {
-        setError("An unexpected error occurred. Please try again.");
+        setError("An unexpected error occurred.");
       }
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
@@ -60,17 +61,15 @@ function Login() {
     <div className="login">
       <form onSubmit={handleSubmit}>
         <h1>Sign In</h1>
-
-        <label htmlFor="email">Username or Email</label>
+        <label htmlFor="email">Email</label>
         <input
           name="userEmail"
-          type="text"
+          type="email"
           placeholder="Enter your email"
           value={userEmail}
           onChange={(e) => setUserEmail(e.target.value)}
           required
         />
-
         <label htmlFor="password">Password</label>
         <input
           name="password"
@@ -80,16 +79,16 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Logging in..." : "Login"}
         </button>
-
-        {/* Show error message */}
         {error && <p className="error">{error}</p>}
       </form>
     </div>
   );
-}
+};
 
 export default Login;
+
+
+
