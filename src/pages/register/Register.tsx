@@ -9,7 +9,7 @@ const Register = () => {
     userEmail: "",
     password: "",
     phoneNumber: "",
-    role: "",
+    userRole: "", // This should match the name attribute of the select input
     location: "",
   });
 
@@ -71,8 +71,8 @@ const Register = () => {
         />
         <label>Role</label>
         <select
-          name="role"
-          value={user.role}
+          name="userRole" // This matches the state key `userRole`
+          value={user.userRole}
           onChange={handleChange}
           required
         >
@@ -97,5 +97,6 @@ const Register = () => {
 };
 
 export default Register;
+
 
 

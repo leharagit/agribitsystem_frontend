@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Navbar.scss";
 
 interface User {
+  email: ReactNode;
+  name: ReactNode;
   id: string;
   username: string;
   role: "Seller" | "Buyer" | "Farmer";
@@ -62,12 +64,12 @@ const Navbar: React.FC = () => {
             <div className="user" onClick={() => setOpen(!open)}>
               <img src={currentUser.img || "/img/noavatar.jpg"} alt="User Avatar" />
               <span>
-                {currentUser?.username} ({currentUser?.role})
+                {currentUser?.name} ({currentUser?.email})
               </span>
               {open && (
                 <div className="options">
                   <p className="user-id">
-                    <strong>Your ID:</strong> {currentUser.id}
+                    <strong>Your Role:</strong> {currentUser.role}
                   </p>
                   {currentUser.role === "Seller" && (
                     <>
@@ -120,7 +122,7 @@ const Navbar: React.FC = () => {
               List Your Product
             </Link>
             <Link className="link menuLink" to="/myGigs">
-              See Bids 
+              See Bids
             </Link>
             <Link className="link menuLink" to="/message">
               Message
@@ -128,9 +130,11 @@ const Navbar: React.FC = () => {
             <Link className="link menuLink" to="/gigs">
               Buy Product
             </Link>
-            <Link className="link menuLink" to="/review">
-              Review
-            </Link>
+            {currentUser?.role === "Seller" && (
+              <Link className="link menuLink" to="/mygigs">
+                Manage Gigs
+              </Link>
+            )}
           </div>
           <hr />
         </>
@@ -140,6 +144,7 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+
 
 
 

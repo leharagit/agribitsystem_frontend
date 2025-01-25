@@ -51,7 +51,7 @@ function Gigs() {
   return (
     <div className="gigs">
       <div className="container">
-        <span className="breadcrumbs">Liverr Graphics & Design</span>
+      
         <h1>Products</h1>
         <p>Explore our collection of products available for you!</p>
 
