@@ -3,10 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./GigDescription.scss";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-import "bootstrap/dist/css/bootstrap.min.css";
-
-
 
 interface Product {
   name: string;
@@ -62,22 +58,58 @@ function GigDescription() {
       }
     };
 
-    fetchProduct();
-    fetchBids();
+    if (productId) {
+      fetchProduct();
+      fetchBids();
+    }
   }, [productId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setBid({ ...bid, [name]: value });
+    setBid(prevBid => ({
+      ...prevBid,
+      [name]: name === 'bidAmount' || name === 'quantity' ? Number(value) : value
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Validation
+    if (!bid.userId || bid.userId.length < 10) {
+      alert("Please enter a valid phone number");
+      return;
+    }
+    
+    if (bid.bidAmount <= 0) {
+      alert("Bid amount must be greater than zero");
+      return;
+    }
+    
+    if (bid.quantity <= 0) {
+      alert("Quantity must be at least 1");
+      return;
+    }
+
     try {
-      const response = await axios.post("http://localhost:8080/api/bids", bid);
+      const response = await axios.post("http://localhost:8080/api/bids", {
+        ...bid,
+        productId: productId
+      });
+      
       if (response.status === 200 || response.status === 201) {
         alert("Bid created successfully!");
-        navigate("/"); // Navigate to another page if required
+        // Refresh bids
+        const updatedBidsResponse = await axios.get(`http://localhost:8080/api/bids/product/${productId}`);
+        setBids(updatedBidsResponse.data);
+        
+        // Reset form
+        setBid({
+          productId: productId || "",
+          userId: "",
+          bidAmount: 0,
+          quantity: 1,
+        });
       }
     } catch (err) {
       console.error("Error creating bid:", err);
@@ -85,8 +117,8 @@ function GigDescription() {
     }
   };
 
-  if (isLoading) return <span>Loading...</span>;
-  if (error) return <span>Error: {error}</span>;
+  if (isLoading) return <div className="text-center mt-5">Loading...</div>;
+  if (error) return <div className="alert alert-danger">{error}</div>;
 
   return (
     <div className="gig-description">
@@ -101,8 +133,8 @@ function GigDescription() {
             <div className="product-details">
               <h1 className="product-title">{product.name}</h1>
               <p className="product-description">{product.description}</p>
-              <span className="product-price">Starting Price: ${product.startBidPrice}</span>
-              <span className="product-quantity">Available Quantity: {product.quantity}</span>
+              <span className="product-price">Starting Price: LKR {product.startBidPrice}</span><br />
+              <span className="product-quantity">Available Quantity: {product.quantity}</span><br />
               <span className="product-quality">Quality: {product.quality}</span>
             </div>
           </div>
@@ -113,24 +145,27 @@ function GigDescription() {
               <div className="form-group">
                 <label htmlFor="userId">Enter Your Phone number</label>
                 <input
-                  type="text"
+                  type="tel"
                   name="userId"
                   id="userId"
                   placeholder="07XXXXXXXX"
                   value={bid.userId}
                   onChange={handleChange}
+                  pattern="0[0-9]{9}"
+                  title="Phone number should start with 0 and be 10 digits long"
                   required
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="bidAmount">Bid Amount</label>
+                <label htmlFor="bidAmount">Bid Amount (LKR)</label>
                 <input
                   type="number"
                   name="bidAmount"
                   id="bidAmount"
                   placeholder="Enter Bid Amount"
-                  value={bid.bidAmount}
+                  value={bid.bidAmount || ''}
                   onChange={handleChange}
+                  min={product.startBidPrice}
                   required
                 />
               </div>
@@ -141,9 +176,10 @@ function GigDescription() {
                   name="quantity"
                   id="quantity"
                   placeholder="Enter Quantity"
-                  value={bid.quantity}
+                  value={bid.quantity || ''}
                   onChange={handleChange}
                   min="1"
+                  max={product.quantity}
                   required
                 />
               </div>
@@ -155,9 +191,9 @@ function GigDescription() {
             <h2 className="section-title">Existing Bids</h2>
             {bids.length > 0 ? (
               <ul>
-                {bids.map((b) => (
-                  <li key={b.productId} className="bid-item">
-                    User: {b.userId}, Bid: ${b.bidAmount}, Quantity: {b.quantity}
+                {bids.map((b, index) => (
+                  <li key={index} className="bid-item">
+                    User: {b.userId}, Bid: LKR {b.bidAmount}, Quantity: {b.quantity}
                   </li>
                 ))}
               </ul>

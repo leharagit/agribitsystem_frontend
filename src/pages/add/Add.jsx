@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Add.scss";
 import { useNavigate } from "react-router-dom";
 
@@ -16,11 +16,21 @@ const Add = () => {
     size: "",
     status: "",
     productQuantity: 0,
+    userId: "", // Automatically filled with the logged-in user's ID
   });
 
   const [image, setImage] = useState(null); // State to hold the image file
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Extract the userId from the JWT token stored in localStorage
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      const { userId } = JSON.parse(currentUser);
+      setProduct((prevProduct) => ({ ...prevProduct, userId })); // Set the userId in the product state
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,8 +71,16 @@ const Add = () => {
     }
 
     try {
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem("currentUser")
+        ? JSON.parse(localStorage.getItem("currentUser")).token
+        : null;
+
       const response = await fetch("http://localhost:8080/api/products", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+        },
         body: formData, // Send multipart form data
       });
 
@@ -161,3 +179,4 @@ const Add = () => {
 };
 
 export default Add;
+
