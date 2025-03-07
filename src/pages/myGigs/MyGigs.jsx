@@ -74,8 +74,8 @@ const MyGigs = () => {
                 <tr key={project.productId}>
                   <td>{project.name}</td>
                   <td>{project.category}</td>
-                  <td>${project.startBidPrice}</td>
-                  <td>${project.buyNowPrice}</td>
+                  <td>LKR{project.startBidPrice}</td>
+                  <td>LKR{project.buyNowPrice}</td>
                   <td>{project.status}</td>
                   <td>
                     <button onClick={() => navigate(`/orders/${project.productId}`)}>

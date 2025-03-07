@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Pay.scss";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, Stripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { useParams } from "react-router-dom";
 import CheckoutForm from "../../components/checkoutForm/CheckoutForm";
@@ -8,13 +8,20 @@ import CheckoutForm from "../../components/checkoutForm/CheckoutForm";
 // Load Stripe with your public key
 const stripePromise = loadStripe("paste your public key");
 
-const Pay = () => {
-  const [clientSecret, setClientSecret] = useState("");
-  const [payment, setPayment] = useState(null); // Store payment details from the backend
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+interface PaymentDetails {
+  transactionId: string;
+  totalAmount: number;
+  paymentMethod: string;
+  paymentStatus: string;
+}
 
-  const { id } = useParams(); // `id` is the Payment ID from the URL params
+const Pay: React.FC = () => {
+  const [clientSecret, setClientSecret] = useState<string>("");
+  const [payment, setPayment] = useState<PaymentDetails | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const { id } = useParams<{ id: string }>(); // `id` is the Payment ID from the URL params
 
   useEffect(() => {
     const fetchPaymentDetails = async () => {
@@ -43,7 +50,7 @@ const Pay = () => {
         }
         const intentData = await intentResponse.json();
         setClientSecret(intentData.clientSecret); // Set Stripe client secret
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);
@@ -55,7 +62,7 @@ const Pay = () => {
 
   // Stripe Elements appearance configuration
   const appearance = {
-    theme: "stripe",
+    theme: "stripe" as "stripe",
     variables: {
       colorPrimary: "#1dbf73",
       fontFamily: "Arial, sans-serif",
