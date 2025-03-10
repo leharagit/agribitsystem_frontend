@@ -116,7 +116,7 @@ const App: React.FC = () => {
         },
         { path: "/register", element: <Register /> },
         { path: "/login", element: <Login /> },
-        { path: "/pay", element: <Pay /> },
+        { path: "/pay/:id", element: <Pay /> },
         { path: "/pay1", element: <AllBids /> },
         { path: "/success", element: <Success /> },
         { path: "/description/:productId", element: <GigDescription /> },

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom"; // ✅ Import useLocation to read state
 import "./Pay.scss";
 import { loadStripe, Stripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import { useParams } from "react-router-dom";
 import CheckoutForm from "../../components/checkoutForm/CheckoutForm";
 
 // Load Stripe with your public key
@@ -16,40 +16,39 @@ interface PaymentDetails {
 }
 
 const Pay: React.FC = () => {
+  const location = useLocation();
+  const { productId, productName, totalAmount } = location.state || {}; // ✅ Read state from navigation
+
   const [clientSecret, setClientSecret] = useState<string>("");
   const [payment, setPayment] = useState<PaymentDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const { id } = useParams<{ id: string }>(); // `id` is the Payment ID from the URL params
-
   useEffect(() => {
-    const fetchPaymentDetails = async () => {
-      try {
-        // Fetch payment details from the backend
-        const response = await fetch(`http://localhost:8080/api/payments/${id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch payment details");
-        }
-        const data = await response.json();
-        setPayment(data);
+    if (!productId || !totalAmount) {
+      setError("Invalid payment details. Please try again.");
+      setLoading(false);
+      return;
+    }
 
+    const fetchPaymentIntent = async () => {
+      try {
         // Create a payment intent via your backend
         const intentResponse = await fetch(
-          `http://localhost:8080/api/payments/${id}/create-payment-intent`,
+          `http://localhost:8080/api/payments/create-payment-intent`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ totalAmount: data.totalAmount }),
+            body: JSON.stringify({ productId, totalAmount }),
           }
         );
         if (!intentResponse.ok) {
           throw new Error("Failed to create payment intent");
         }
         const intentData = await intentResponse.json();
-        setClientSecret(intentData.clientSecret); // Set Stripe client secret
+        setClientSecret(intentData.clientSecret); // ✅ Set Stripe client secret
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -57,22 +56,15 @@ const Pay: React.FC = () => {
       }
     };
 
-    if (id) fetchPaymentDetails();
-  }, [id]);
+    fetchPaymentIntent();
+  }, [productId, totalAmount]);
 
-  // Stripe Elements appearance configuration
   const appearance = {
     theme: "stripe" as "stripe",
-    variables: {
-      colorPrimary: "#1dbf73",
-      fontFamily: "Arial, sans-serif",
-    },
+    variables: { colorPrimary: "#1dbf73", fontFamily: "Arial, sans-serif" },
   };
 
-  const options = {
-    clientSecret,
-    appearance,
-  };
+  const options = { clientSecret, appearance };
 
   if (loading) {
     return (
@@ -96,26 +88,11 @@ const Pay: React.FC = () => {
 
   return (
     <div className="pay">
-      {payment && (
-        <div className="payment-details mb-4 text-center">
-          <h2>Payment Details</h2>
-          <p>
-            <strong>Transaction ID:</strong> {payment.transactionId}
-          </p>
-          <p>
-            <strong>Total Amount:</strong> ${payment.totalAmount}
-          </p>
-          <p>
-            <strong>Payment Method:</strong> {payment.paymentMethod}
-          </p>
-          <p>
-            <strong>Payment Status:</strong>{" "}
-            <span className={payment.paymentStatus === "Completed" ? "text-success" : "text-warning"}>
-              {payment.paymentStatus}
-            </span>
-          </p>
-        </div>
-      )}
+      <div className="payment-details mb-4 text-center">
+        <h2>Payment Details</h2>
+        <p><strong>Product:</strong> {productName}</p>
+        <p><strong>Total Amount:</strong> LKR {totalAmount}</p>
+      </div>
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm />
@@ -126,4 +103,5 @@ const Pay: React.FC = () => {
 };
 
 export default Pay;
+
 
