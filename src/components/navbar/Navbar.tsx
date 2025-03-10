@@ -122,10 +122,10 @@ const Navbar: React.FC = () => {
               List Your Product
             </Link>
             <Link className="link menuLink" to="/myGigs">
-              See Bids
+              MY Product
             </Link>
-            <Link className="link menuLink" to="/message">
-              Message
+            <Link className="link menuLink" to="/pay1">
+              See MY Bids
             </Link>
             <Link className="link menuLink" to="/gigs">
               Buy Product

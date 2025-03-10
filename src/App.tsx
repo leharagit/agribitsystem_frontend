@@ -5,6 +5,7 @@ import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UserProvider, useUser } from "./pages/login/UserContext";
+import UserBids from "./pages/bid/UserBids";
 
 // Lazy-loaded components
 const Home = lazy(() => import("./pages/home/Home"));
@@ -115,6 +116,7 @@ const App: React.FC = () => {
         { path: "/register", element: <Register /> },
         { path: "/login", element: <Login /> },
         { path: "/pay", element: <Pay /> },
+        { path: "/pay1", element: <UserBids /> },
         { path: "/success", element: <Success /> },
         { path: "/description/:productId", element: <GigDescription /> },
       ],
