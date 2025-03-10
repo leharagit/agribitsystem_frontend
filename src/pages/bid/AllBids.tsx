@@ -47,6 +47,34 @@ const UserBids: React.FC = () => {
     fetchBids();
   }, [userId]);
 
+  const handleBuyNow = async (bid: Bid) => {
+    alert(`Processing "Buy Now" for ${bid.productName} (LKR ${bid.totalAmount})`);
+    
+    // ✅ TODO: Replace with actual API call
+    try {
+      const response = await fetch(`http://localhost:8080/api/orders`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: bid.userId,
+          productId: bid.productId,
+          productName: bid.productName,
+          quantity: bid.quantity,
+          totalAmount: bid.totalAmount,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Purchase successful!");
+      } else {
+        throw new Error("Failed to process the purchase.");
+      }
+    } catch (error) {
+      console.error("Buy Now error:", error);
+      alert("Error processing purchase.");
+    }
+  };
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -83,6 +111,7 @@ const UserBids: React.FC = () => {
                 <th>Bid Amount</th>
                 <th>Quantity</th>
                 <th>Total Amount</th>
+                <th>Action</th> {/* ✅ New "Buy Now" column */}
               </tr>
             </thead>
             <tbody>
@@ -95,11 +124,19 @@ const UserBids: React.FC = () => {
                     <td>LKR {bid.bidAmount}</td>
                     <td>{bid.quantity}</td>
                     <td>LKR {bid.totalAmount}</td>
+                    <td>
+                      <button
+                        className="btn btn-success"
+                        onClick={() => handleBuyNow(bid)}
+                      >
+                        Buy Now
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={6} className="text-center">
+                  <td colSpan={7} className="text-center">
                     No bids found for your account.
                   </td>
                 </tr>
