@@ -6,6 +6,7 @@ import "./Orders.scss";
 interface Bid {
   id: string;
   productId: string;
+  productName: string; // ✅ Added product name
   userId: string;
   bidAmount: number;
   quantity: number;
@@ -14,6 +15,7 @@ interface Bid {
 
 interface MaxTotalAmountBid {
   productId: string;
+  productName: string; // ✅ Added product name
   userId: string;
   totalAmount: number;
 }
@@ -54,26 +56,6 @@ const Orders: React.FC = () => {
     }
   }, [productId]);
 
-  // Export to CSV function
-  const exportToCSV = () => {
-    const csvContent = [
-      "Bid ID,Product ID,User Phone Number,Bid Amount,Quantity,Total Amount",
-      ...bids.map(bid => 
-        `${bid.id},${bid.productId},${bid.userId},${bid.bidAmount},${bid.quantity},${bid.totalAmount}`
-      )
-    ].join("\n");
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute("download", `bids_${productId}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -97,13 +79,6 @@ const Orders: React.FC = () => {
       <div className="container shadow-lg rounded p-4 bg-white">
         <div className="title d-flex justify-content-between align-items-center">
           <h1>Bids List for Product ID: {productId}</h1>
-          <button 
-            className="btn btn-success" 
-            onClick={exportToCSV}
-            disabled={bids.length === 0}
-          >
-            Export to CSV
-          </button>
         </div>
 
         {/* Display the highest bid information */}
@@ -111,6 +86,7 @@ const Orders: React.FC = () => {
           <div className="alert alert-info text-center">
             <h4>Max Total Amount Bid</h4>
             <p>
+              <strong>Product Name:</strong> {maxTotalAmountBid.productName}, {" "}
               <strong>Product ID:</strong> {maxTotalAmountBid.productId}, {" "}
               <strong>User Phone Number:</strong> {maxTotalAmountBid.userId}, {" "}
               <strong>Total Amount:</strong> LKR {maxTotalAmountBid.totalAmount}
@@ -126,6 +102,7 @@ const Orders: React.FC = () => {
           <table className="table table-hover table-striped">
             <thead className="table-dark">
               <tr>
+                <th>Product Name</th>
                 <th>Product ID</th>
                 <th>User Phone Number</th>
                 <th>Bid Amount</th>
@@ -136,6 +113,7 @@ const Orders: React.FC = () => {
             <tbody>
               {bids.map((bid) => (
                 <tr key={bid.id}>
+                  <td>{bid.productName}</td> {/* ✅ Display product name */}
                   <td>{bid.productId}</td>
                   <td>{bid.userId}</td>
                   <td>LKR {bid.bidAmount}</td>
