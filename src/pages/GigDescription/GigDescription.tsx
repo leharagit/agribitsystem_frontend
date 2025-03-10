@@ -17,6 +17,7 @@ interface Product {
 interface Bid {
   productId: string;
   userId: string;
+  phoneNumber: string;  // ✅ New field for phone number
   bidAmount: number;
   quantity: number;
 }
@@ -29,10 +30,12 @@ function GigDescription() {
   const [bid, setBid] = useState<Bid>({
     productId: productId || "",
     userId: "",
+    phoneNumber: "",
     bidAmount: 0,
     quantity: 1,
   });
   const [bids, setBids] = useState<Bid[]>([]);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,26 +69,48 @@ function GigDescription() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    if (name === "phoneNumber") {
+      // ✅ Phone number validation
+      if (!/^\d{0,10}$/.test(value)) {
+        setPhoneError("Phone number must contain only numbers and be 10 digits long");
+        return;
+      } else if (!value.startsWith("0")) {
+        setPhoneError("Phone number must start with 0");
+        return;
+      } else if (value.length < 10) {
+        setPhoneError("Phone number must be exactly 10 digits");
+        return;
+      } else {
+        setPhoneError(null);
+      }
+    }
+
     setBid(prevBid => ({
       ...prevBid,
-      [name]: name === 'bidAmount' || name === 'quantity' ? Number(value) : value
+      [name]: name === "bidAmount" || name === "quantity" ? Number(value) : value
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Validation
-    if (!bid.userId || bid.userId.length < 10) {
-      alert("Please enter a valid phone number");
+
+    // ✅ Validation
+    if (!bid.userId || bid.userId.length < 3) {
+      alert("Please enter a valid user ID");
       return;
     }
-    
+
+    if (!bid.phoneNumber || bid.phoneNumber.length !== 10 || !/^\d+$/.test(bid.phoneNumber)) {
+      alert("Please enter a valid 10-digit phone number starting with 0");
+      return;
+    }
+
     if (bid.bidAmount <= 0) {
       alert("Bid amount must be greater than zero");
       return;
     }
-    
+
     if (bid.quantity <= 0) {
       alert("Quantity must be at least 1");
       return;
@@ -96,17 +121,16 @@ function GigDescription() {
         ...bid,
         productId: productId
       });
-      
+
       if (response.status === 200 || response.status === 201) {
         alert("Bid created successfully!");
-        // Refresh bids
         const updatedBidsResponse = await axios.get(`http://localhost:8080/api/bids/product/${productId}`);
         setBids(updatedBidsResponse.data);
-        
-        // Reset form
+
         setBid({
           productId: productId || "",
           userId: "",
+          phoneNumber: "",
           bidAmount: 0,
           quantity: 1,
         });
@@ -143,19 +167,34 @@ function GigDescription() {
             <h2 className="section-title">Create a New Bid</h2>
             <form onSubmit={handleSubmit} className="bid-form">
               <div className="form-group">
-                <label htmlFor="userId">Enter Your Phone number</label>
+                <label htmlFor="userId">Enter Your User ID</label>
                 <input
-                  type="tel"
+                  type="text"
                   name="userId"
                   id="userId"
-                  placeholder="07XXXXXXXX"
+                  placeholder="Enter your user ID"
                   value={bid.userId}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="phoneNumber">Enter Your Phone Number</label>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  id="phoneNumber"
+                  placeholder="07XXXXXXXX"
+                  value={bid.phoneNumber}
                   onChange={handleChange}
                   pattern="0[0-9]{9}"
                   title="Phone number should start with 0 and be 10 digits long"
                   required
                 />
+                {phoneError && <p className="text-danger">{phoneError}</p>}
               </div>
+
               <div className="form-group">
                 <label htmlFor="bidAmount">Bid Amount (LKR)</label>
                 <input
@@ -169,6 +208,7 @@ function GigDescription() {
                   required
                 />
               </div>
+
               <div className="form-group">
                 <label htmlFor="quantity">Quantity</label>
                 <input
@@ -183,6 +223,7 @@ function GigDescription() {
                   required
                 />
               </div>
+
               <button type="submit" className="submit-button">Submit Bid</button>
             </form>
           </div>
@@ -193,7 +234,10 @@ function GigDescription() {
               <ul>
                 {bids.map((b, index) => (
                   <li key={index} className="bid-item">
-                    User: {b.userId}, Bid: LKR {b.bidAmount}, Quantity: {b.quantity}
+                    <strong>User:</strong> {b.userId}, 
+                    <strong> Phone:</strong> {b.phoneNumber}, 
+                    <strong> Bid:</strong> LKR {b.bidAmount}, 
+                    <strong> Quantity:</strong> {b.quantity}
                   </li>
                 ))}
               </ul>
@@ -210,3 +254,5 @@ function GigDescription() {
 }
 
 export default GigDescription;
+
+
