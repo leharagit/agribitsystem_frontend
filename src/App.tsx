@@ -5,10 +5,8 @@ import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UserProvider, useUser } from "./pages/login/UserContext";
-import UserBids from "./pages/bid/AllBids";
-import AllBids from "./pages/bid/AllBids";
 
-// Lazy-loaded components
+// Lazy-loaded components for performance optimization
 const Home = lazy(() => import("./pages/home/Home"));
 const Gigs = lazy(() => import("./pages/gigs/Gigs"));
 const Gig = lazy(() => import("./pages/gig/Gig"));
@@ -19,9 +17,10 @@ const Orders = lazy(() => import("./pages/orders/Orders"));
 const Messages = lazy(() => import("./pages/messages/Messages"));
 const Message = lazy(() => import("./pages/message/Message"));
 const MyGigs = lazy(() => import("./pages/myGigs/MyGigs"));
-const Pay = lazy(() => import("./pages/pay/Pay"));
+const Pay = lazy(() => import("./pages/pay/Pay")); // ✅ Fixed Pay import
 const Success = lazy(() => import("./pages/success/Success"));
 const GigDescription = lazy(() => import("./pages/GigDescription/GigDescription"));
+const AllBids = lazy(() => import("./pages/bid/AllBids")); // ✅ Fixed duplicate import
 
 // Constants for user roles
 const ROLES = {
@@ -30,7 +29,7 @@ const ROLES = {
   ADMIN: "Admin",
 };
 
-// Query Client for React Query
+// React Query Client
 const queryClient = new QueryClient();
 
 // Layout component with Navbar, Footer, and dynamic Outlet content
@@ -84,10 +83,7 @@ const App: React.FC = () => {
             </ProtectedRoute>
           ),
         },
-        {
-          path: "/gig/:id",
-          element: <Gig />,
-        },
+        { path: "/gig/:id", element: <Gig /> },
         {
           path: "/myGigs",
           element: (
@@ -116,8 +112,9 @@ const App: React.FC = () => {
         },
         { path: "/register", element: <Register /> },
         { path: "/login", element: <Login /> },
-        { path: "/pay/:id", element: <Pay /> },
+        { path: "/pay/:id", element: <Pay /> }, // ✅ Fixed Pay route
         { path: "/pay1", element: <AllBids /> },
+         // ✅ Display all bids
         { path: "/success", element: <Success /> },
         { path: "/description/:productId", element: <GigDescription /> },
       ],

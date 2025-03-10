@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ Import useNavigate
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./bid.scss";
 
@@ -17,6 +18,7 @@ const UserBids: React.FC = () => {
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate(); // ✅ Initialize navigation
 
   // ✅ Retrieve `userId` from localStorage
   const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
@@ -47,32 +49,16 @@ const UserBids: React.FC = () => {
     fetchBids();
   }, [userId]);
 
-  const handleBuyNow = async (bid: Bid) => {
-    alert(`Processing "Buy Now" for ${bid.productName} (LKR ${bid.totalAmount})`);
-    
-    // ✅ TODO: Replace with actual API call
-    try {
-      const response = await fetch(`http://localhost:8080/api/orders`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: bid.userId,
-          productId: bid.productId,
-          productName: bid.productName,
-          quantity: bid.quantity,
-          totalAmount: bid.totalAmount,
-        }),
-      });
-
-      if (response.ok) {
-        alert("Purchase successful!");
-      } else {
-        throw new Error("Failed to process the purchase.");
-      }
-    } catch (error) {
-      console.error("Buy Now error:", error);
-      alert("Error processing purchase.");
-    }
+  const handleBuyNow = (bid: Bid) => {
+    // ✅ Navigate to `/pay/:id` with bid details
+    navigate(`/pay/${bid.id}`, {
+      state: {
+        bidId: bid.id,
+        productId: bid.productId,
+        productName: bid.productName,
+        totalAmount: bid.totalAmount,
+      },
+    });
   };
 
   if (loading) {
@@ -111,7 +97,7 @@ const UserBids: React.FC = () => {
                 <th>Bid Amount</th>
                 <th>Quantity</th>
                 <th>Total Amount</th>
-                <th>Action</th> {/* ✅ New "Buy Now" column */}
+                <th>Action</th> {/* ✅ "Buy Now" column */}
               </tr>
             </thead>
             <tbody>
@@ -150,6 +136,7 @@ const UserBids: React.FC = () => {
 };
 
 export default UserBids;
+
 
 
 
