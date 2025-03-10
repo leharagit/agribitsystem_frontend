@@ -1,4 +1,3 @@
-// Login.tsx
 import React, { useState } from "react";
 import "./Login.scss";
 import axios from "axios";
@@ -26,20 +25,22 @@ const Login: React.FC = () => {
       });
 
       const userData = res.data;
+      const userId = userData.userId; // ✅ Extract user ID
 
       setCurrentUser(userData);
       localStorage.setItem("currentUser", JSON.stringify(userData));
+      localStorage.setItem("userId", userId); // ✅ Store user ID in localStorage
 
       const userRole = userData.role;
       switch (userRole) {
         case "Farmer":
-          navigate("/add");
+          navigate(`/add?userId=${userId}`); // ✅ Pass userId in URL
           break;
         case "Buyer":
-          navigate("/gigs");
+          navigate(`/gigs?userId=${userId}`);
           break;
         case "Admin":
-          navigate("/admin");
+          navigate(`/admin?userId=${userId}`);
           break;
         default:
           throw new Error("Invalid user role. Please contact support.");
@@ -89,6 +90,7 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
 
 
 

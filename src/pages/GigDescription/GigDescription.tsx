@@ -17,7 +17,7 @@ interface Product {
 interface Bid {
   productId: string;
   userId: string;
-  phoneNumber: string;  // ✅ New field for phone number
+  phoneNumber: string;
   bidAmount: number;
   quantity: number;
 }
@@ -27,16 +27,20 @@ function GigDescription() {
   const [error, setError] = useState<string | null>(null);
   const { productId } = useParams<{ productId: string }>();
   const [product, setProduct] = useState<Product | null>(null);
+  const [bids, setBids] = useState<Bid[]>([]);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  // ✅ Get current userId from localStorage
+  const userId = localStorage.getItem("userId") || "";
+
   const [bid, setBid] = useState<Bid>({
     productId: productId || "",
-    userId: "",
+    userId: userId, // ✅ Automatically use logged-in user ID
     phoneNumber: "",
     bidAmount: 0,
     quantity: 1,
   });
-  const [bids, setBids] = useState<Bid[]>([]);
-  const [phoneError, setPhoneError] = useState<string | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -71,7 +75,6 @@ function GigDescription() {
     const { name, value } = e.target;
 
     if (name === "phoneNumber") {
-      // ✅ Phone number validation
       if (!/^\d{0,10}$/.test(value)) {
         setPhoneError("Phone number must contain only numbers and be 10 digits long");
         return;
@@ -96,8 +99,8 @@ function GigDescription() {
     e.preventDefault();
 
     // ✅ Validation
-    if (!bid.userId || bid.userId.length < 3) {
-      alert("Please enter a valid user ID");
+    if (!bid.userId) {
+      alert("User ID not found. Please log in again.");
       return;
     }
 
@@ -129,7 +132,7 @@ function GigDescription() {
 
         setBid({
           productId: productId || "",
-          userId: "",
+          userId: userId,
           phoneNumber: "",
           bidAmount: 0,
           quantity: 1,
@@ -167,15 +170,13 @@ function GigDescription() {
             <h2 className="section-title">Create a New Bid</h2>
             <form onSubmit={handleSubmit} className="bid-form">
               <div className="form-group">
-                <label htmlFor="userId">Enter Your User ID</label>
+                <label htmlFor="userId">User ID (Auto-filled)</label>
                 <input
                   type="text"
                   name="userId"
                   id="userId"
-                  placeholder="Enter your user ID"
                   value={bid.userId}
-                  onChange={handleChange}
-                  required
+                  disabled
                 />
               </div>
 
@@ -226,24 +227,6 @@ function GigDescription() {
 
               <button type="submit" className="submit-button">Submit Bid</button>
             </form>
-          </div>
-
-          <div className="bid-list">
-            <h2 className="section-title">Existing Bids</h2>
-            {bids.length > 0 ? (
-              <ul>
-                {bids.map((b, index) => (
-                  <li key={index} className="bid-item">
-                    <strong>User:</strong> {b.userId}, 
-                    <strong> Phone:</strong> {b.phoneNumber}, 
-                    <strong> Bid:</strong> LKR {b.bidAmount}, 
-                    <strong> Quantity:</strong> {b.quantity}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No bids yet.</p>
-            )}
           </div>
         </>
       ) : (
