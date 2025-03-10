@@ -19,12 +19,12 @@ interface MaxTotalAmountBid {
 }
 
 const Orders: React.FC = () => {
-  const [bids, setBids] = useState<Bid[]>([]); 
-  const [maxTotalAmountBid, setMaxTotalAmountBid] = useState<MaxTotalAmountBid | null>(null); 
-  const [loading, setLoading] = useState<boolean>(true); 
-  const [error, setError] = useState<string | null>(null); 
+  const [bids, setBids] = useState<Bid[]>([]);
+  const [maxTotalAmountBid, setMaxTotalAmountBid] = useState<MaxTotalAmountBid | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const { productId } = useParams(); 
+  const { productId } = useParams();
 
   useEffect(() => {
     const fetchBidsAndMaxBid = async () => {
@@ -54,9 +54,8 @@ const Orders: React.FC = () => {
     }
   }, [productId]);
 
-  // New function to export bids to CSV
+  // Export to CSV function
   const exportToCSV = () => {
-    // Convert bids to CSV format
     const csvContent = [
       "Bid ID,Product ID,User Phone Number,Bid Amount,Quantity,Total Amount",
       ...bids.map(bid => 
@@ -64,7 +63,6 @@ const Orders: React.FC = () => {
       )
     ].join("\n");
 
-    // Create a Blob and download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
@@ -107,16 +105,23 @@ const Orders: React.FC = () => {
             Export to CSV
           </button>
         </div>
+
+        {/* Display the highest bid information */}
         {maxTotalAmountBid && (
           <div className="alert alert-info text-center">
             <h4>Max Total Amount Bid</h4>
             <p>
-              <strong>Product ID:</strong> {maxTotalAmountBid.productId},{" "}
-              <strong>User Phone Number:</strong> {maxTotalAmountBid.userId},{" "}
+              <strong>Product ID:</strong> {maxTotalAmountBid.productId}, {" "}
+              <strong>User Phone Number:</strong> {maxTotalAmountBid.userId}, {" "}
               <strong>Total Amount:</strong> LKR {maxTotalAmountBid.totalAmount}
             </p>
+            <a href={`tel:${maxTotalAmountBid.userId}`} className="btn btn-primary">
+              📞 Call Highest Bidder
+            </a>
           </div>
         )}
+
+        {/* Table for bids list */}
         <div className="table-responsive">
           <table className="table table-hover table-striped">
             <thead className="table-dark">
