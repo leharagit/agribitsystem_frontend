@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; // ✅ Import useLocation
 import axios from "axios";
 import "./AddPayment.scss"; // Import styling
 
 const AddPayment: React.FC = () => {
+  const location = useLocation();
+  const { totalAmount } = location.state || { totalAmount: "0.00" }; // ✅ Get totalAmount from Pay.tsx
+
   const [payment, setPayment] = useState({
     cardType: "",
     cardNumber: "",
@@ -10,7 +14,7 @@ const AddPayment: React.FC = () => {
     expiryYear: "",
     cardHolder: "",
     email: "",
-    amount: "0.22", // Default amount
+    amount: totalAmount, // ✅ Set total amount dynamically
     agreeTerms: false,
   });
 
@@ -43,13 +47,13 @@ const AddPayment: React.FC = () => {
       if (response.status === 200 || response.status === 201) {
         setSuccess(true);
         setPayment({
+          ...payment,
           cardType: "",
           cardNumber: "",
           expiryMonth: "",
           expiryYear: "",
           cardHolder: "",
           email: "",
-          amount: "0.22",
           agreeTerms: false,
         });
       }
@@ -67,8 +71,6 @@ const AddPayment: React.FC = () => {
         <div className="card-logos">
           <img src="/img/visa.png" alt="Visa" />
           <img src="/img/master.png" alt="MasterCard" />
-          <img src="/img/amex.png" alt="Amex" />
-          <img src="/img/discover.png" alt="Discover" />
         </div>
       </div>
 
@@ -80,8 +82,6 @@ const AddPayment: React.FC = () => {
             <option value="">--- Select Card Type ---</option>
             <option value="Visa">Visa</option>
             <option value="MasterCard">MasterCard</option>
-            <option value="Amex">American Express</option>
-            <option value="Discover">Discover</option>
           </select>
         </div>
 
@@ -150,7 +150,7 @@ const AddPayment: React.FC = () => {
         {/* Amount */}
         <div className="form-group">
           <label>Amount to be charged to card:</label>
-          <input type="text" name="amount" value={`€ ${payment.amount}`} disabled />
+          <input type="text" name="amount" value={`LKR ${payment.amount}`} disabled />
         </div>
 
         {/* Terms and Conditions */}
@@ -170,21 +170,6 @@ const AddPayment: React.FC = () => {
           <button type="submit" className="continue-btn" disabled={loading}>
             {loading ? "Processing..." : "Continue"}
           </button>
-          <button type="reset" className="clear-btn" onClick={() => setPayment({
-            cardType: "",
-            cardNumber: "",
-            expiryMonth: "",
-            expiryYear: "",
-            cardHolder: "",
-            email: "",
-            amount: "0.22",
-            agreeTerms: false,
-          })}>
-            Clear
-          </button>
-          <button type="button" className="cancel-btn">
-            Cancel
-          </button>
         </div>
 
         {/* Error and Success Messages */}
@@ -196,3 +181,4 @@ const AddPayment: React.FC = () => {
 };
 
 export default AddPayment;
+

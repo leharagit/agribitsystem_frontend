@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useLocation } from "react-router-dom"; 
+import { useParams, useLocation, useNavigate } from "react-router-dom"; // ✅ Import useNavigate
 import "./Pay.scss";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -8,14 +8,15 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 const stripePromise = loadStripe("your-stripe-public-key");
 
 const Pay: React.FC = () => {
-  const { id } = useParams(); // ✅ Get bid ID
+  const { id } = useParams(); // ✅ Get bid ID  
   const location = useLocation();
+  const navigate = useNavigate(); // ✅ Initialize navigation
   const { bidId, productId, productName, totalAmount } = location.state || {};
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("card");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("");
 
   useEffect(() => {
     if (!productId || !totalAmount) {
@@ -49,7 +50,15 @@ const Pay: React.FC = () => {
   }, [productId, totalAmount]);
 
   const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedPaymentMethod(event.target.value);
+    const method = event.target.value;
+    setSelectedPaymentMethod(method);
+
+    if (method === "card") {
+      // ✅ Redirect to `AddPayment` component when selecting Credit Card Payment
+      navigate("/crad", {
+        state: { productId, productName, totalAmount }
+      });
+    }
   };
 
   if (loading) return <div>Loading...</div>;
@@ -91,79 +100,13 @@ const Pay: React.FC = () => {
       </div>
 
       {/* ✅ Render Payment Option Based on Selection */}
-      {selectedPaymentMethod === "card" && clientSecret && (
-        <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <CheckoutForm clientSecret={clientSecret} />
-        </Elements>
-      )}
-
       {selectedPaymentMethod === "bank" && <BankTransferInstructions />}
-
       {selectedPaymentMethod === "cod" && <CashOnDeliveryConfirmation />}
     </div>
   );
 };
 
 export default Pay;
-
-/* ✅ CheckoutForm for Credit Card Payment */
-interface CheckoutFormProps {
-  clientSecret: string;
-}
-
-const CheckoutForm: React.FC<CheckoutFormProps> = ({ clientSecret }) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    if (!stripe || !elements) {
-      setError("Stripe is not initialized. Please refresh the page.");
-      setLoading(false);
-      return;
-    }
-
-    const cardElement = elements.getElement(CardElement);
-
-    if (!cardElement) {
-      setError("Card element not found.");
-      setLoading(false);
-      return;
-    }
-
-    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret || "", {
-      payment_method: {
-        card: cardElement,
-      },
-    });
-
-    if (error) {
-      setError(error.message || "Payment failed.");
-    } else if (paymentIntent?.status === "succeeded") {
-      setSuccess(true);
-    }
-
-    setLoading(false);
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <h3>Enter Card Details</h3>
-      <CardElement />
-      <button type="submit" disabled={!stripe || loading} className="btn btn-primary mt-3">
-        {loading ? "Processing..." : "Pay Now"}
-      </button>
-      {error && <p className="text-danger">{error}</p>}
-      {success && <p className="text-success">Payment Successful!</p>}
-    </form>
-  );
-};
 
 /* ✅ Bank Transfer Instructions */
 const BankTransferInstructions: React.FC = () => {
