@@ -9,11 +9,8 @@ const MyGigs = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
-
-  // Retrieve the logged-in user's ID from localStorage
   const userId = JSON.parse(localStorage.getItem("currentUser"))?.userId;
 
-  // Fetch user's projects based on the userId
   useEffect(() => {
     if (!userId) {
       setError("User not logged in.");
@@ -81,7 +78,7 @@ const MyGigs = () => {
                     <button onClick={() => navigate(`/orders/${project.productId}`)}>
                       View Bids
                     </button>
-                    <button onClick={() => navigate(`/edit/${project.productId}`)}>Edit</button>
+                    <button onClick={() => navigate(`/add/${project.productId}`)}>Edit</button>
                     <button onClick={() => handleDelete(project.productId)}>Delete</button>
                   </td>
                 </tr>
@@ -97,6 +94,8 @@ const MyGigs = () => {
 };
 
 export default MyGigs;
+
+
 
 
 

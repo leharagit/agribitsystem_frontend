@@ -5,6 +5,7 @@ import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UserProvider, useUser } from "./pages/login/UserContext";
+import AddPayment from "./pages/addcrad/AddPayment";
 
 // Lazy-loaded components for performance optimization
 const Home = lazy(() => import("./pages/home/Home"));
@@ -15,7 +16,7 @@ const Register = lazy(() => import("./pages/register/Register"));
 const Add = lazy(() => import("./pages/add/Add"));
 const Orders = lazy(() => import("./pages/orders/Orders"));
 const Messages = lazy(() => import("./pages/messages/Messages"));
-const Message = lazy(() => import("./pages/message/Message"));
+const Message = lazy(() => import("./pages/addcrad/AddPayment"));
 const MyGigs = lazy(() => import("./pages/myGigs/MyGigs"));
 const Pay = lazy(() => import("./pages/pay/Pay")); // ✅ Fixed Pay import
 const Success = lazy(() => import("./pages/success/Success"));
@@ -114,6 +115,8 @@ const App: React.FC = () => {
         { path: "/login", element: <Login /> },
         { path: "/pay/:id", element: <Pay /> }, // ✅ Fixed Pay route
         { path: "/pay1", element: <AllBids /> },
+        { path: "/crad", element: <AddPayment /> },
+        
          // ✅ Display all bids
         { path: "/success", element: <Success /> },
         { path: "/description/:productId", element: <GigDescription /> },

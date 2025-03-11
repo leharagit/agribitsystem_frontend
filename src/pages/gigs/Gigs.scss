@@ -18,6 +18,9 @@
     }
 
     h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #222;
     }
 
     p {
@@ -38,18 +41,18 @@
         color: #555;
         font-weight: 300;
 
-        input{
+        input {
           padding: 5px;
           border: 1px solid lightgrey;
           border-radius: 5px;
           outline: none;
 
-          &::placeholder{
+          &::placeholder {
             color: #999;
           }
         }
 
-        button{
+        button {
           padding: 5px 10px;
           background-color: #1dbf73;
           color: white;
@@ -57,8 +60,12 @@
           font-weight: 500;
           border-radius: 5px;
           cursor: pointer;
-        }
+          transition: background 0.3s ease;
 
+          &:hover {
+            background-color: #17a864;
+          }
+        }
       }
 
       .right {
@@ -97,6 +104,11 @@
 
           span {
             cursor: pointer;
+            transition: color 0.3s ease;
+
+            &:hover {
+              color: #1dbf73;
+            }
           }
         }
       }
@@ -106,6 +118,43 @@
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    /* ✅ Pagination Styles */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin-top: 20px;
+
+      button {
+        padding: 10px 16px;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        border: none;
+        background: #007bff;
+        color: white;
+        transition: background 0.3s ease;
+
+        &:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+        }
+
+        &:hover:not(:disabled) {
+          background: #0056b3;
+        }
+      }
+
+      span {
+        font-size: 16px;
+        font-weight: bold;
+        color: #555;
+      }
     }
   }
 }
+

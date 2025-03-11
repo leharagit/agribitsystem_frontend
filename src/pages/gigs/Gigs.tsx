@@ -9,6 +9,8 @@ function Gigs() {
   const [data, setData] = useState<GigCardProps["item"][]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1); // ✅ Pagination state
+  const itemsPerPage = 10; // ✅ Number of items per page
 
   // ✅ References for min and max bid price inputs
   const minBidRef = useRef<HTMLInputElement>(null);
@@ -20,12 +22,12 @@ function Gigs() {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const minBidPrice = minBidRef.current?.value || "0";
       const maxBidPrice = maxBidRef.current?.value || "100000"; // Default max
 
       const response = await axios.get(
-        `http://localhost:8080/api/products?startBidPrice=${minBidPrice}&maxBidPrice=${maxBidPrice}&sort=${sort}`,
+        `http://localhost:8080/api/products?startBidPrice=${minBidPrice}&maxBidPrice=${maxBidPrice}&sort=${sort}&page=${currentPage}&limit=${itemsPerPage}`,
         {
           headers: {
             "Current-User-ID": currentUser.id || "",
@@ -45,11 +47,14 @@ function Gigs() {
     setOpen(false);
   };
 
-  const applyFilters = () => fetchData();
+  const applyFilters = () => {
+    setCurrentPage(1); // ✅ Reset to first page on new filter
+    fetchData();
+  };
 
   useEffect(() => {
     fetchData();
-  }, [sort]);
+  }, [sort, currentPage]); // ✅ Refetch on page change
 
   return (
     <div className="gigs">
@@ -100,12 +105,31 @@ function Gigs() {
             !isLoading && !error && <span>No products found.</span>
           )}
         </div>
+
+        {/* ✅ Pagination Controls */}
+        <div className="pagination">
+          <button
+            className="btn btn-secondary"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+          >
+            Previous
+          </button>
+          <span>Page {currentPage}</span>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
 export default Gigs;
+
 
 
 

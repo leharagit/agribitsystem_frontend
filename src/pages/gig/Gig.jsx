@@ -1,112 +1,123 @@
-import React, { useState } from "react";
-import "./Gig.scss";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import "./Edit.scss";
 
-const Gig = () => {
-  const [bid, setBid] = useState({
+const Edit = () => {
+  const { productId } = useParams(); // ✅ Get productId from URL (for editing)
+  const navigate = useNavigate();
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState({});
+  
+  const [product, setProduct] = useState({
     productId: "",
+    name: "",
+    category: "",
+    description: "",
+    quantity: 0,
+    quality: "",
+    location: "",
+    startBidPrice: 0.0,
+    buyNowPrice: 0.0,
+    size: "",
+    status: "",
+    productQuantity: 0,
     userId: "",
-    bidAmount: 0.0,
-    quantity: 1.0, // Added quantity field
   });
 
-  const navigate = useNavigate();
+  // ✅ Fetch product details if `productId` exists
+  useEffect(() => {
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      const { userId } = JSON.parse(currentUser);
+      setProduct((prev) => ({ ...prev, userId }));
+    }
+
+    if (productId) {
+      axios
+        .get(`http://localhost:8080/api/products/${productId}`)
+        .then((response) => {
+          setProduct(response.data); // ✅ Fill the form with existing data
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, [productId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setBid({ ...bid, [name]: value });
+    setProduct({ ...product, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:8080/api/bids", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bid),
-      });
 
-      if (response.ok) {
-        alert("Bid created successfully!");
-        navigate("/"); // Navigate to the bids list or another relevant page
+    const formData = new FormData();
+    formData.append("product", JSON.stringify(product));
+    if (image) {
+      formData.append("image", image);
+    }
+
+    try {
+      const token = localStorage.getItem("currentUser")
+        ? JSON.parse(localStorage.getItem("currentUser")).token
+        : null;
+
+      let response;
+      if (productId) {
+        // ✅ Update existing product
+        response = await axios.put(`http://localhost:8080/api/products/${productId}`, formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
       } else {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message}`);
+        // ✅ Create new product
+        response = await axios.post("http://localhost:8080/api/products", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
       }
-    } catch (error) {
-      console.error("Error creating bid:", error);
-      alert("Failed to create bid. Please try again.");
+
+      if (response.status === 200) {
+        alert(productId ? "Product updated successfully!" : "Product created successfully!");
+        navigate("/gigs");
+      }
+    } catch {
+      alert("Failed to save product. Please try again.");
     }
   };
 
-  return (
-    <div className="add">
+  return loading ? (
+    <p>Loading...</p>
+  ) : (
+    <div className="edit">
       <div className="container">
-        <h1>Create a New Bid</h1>
+        <h1>{productId ? "Edit Product" : "Add New Product"}</h1>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="productId">Product ID</label>
-            <input
-              type="text"
-              name="productId"
-              id="productId"
-              placeholder="Enter Product ID"
-              value={bid.productId}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="userId">User ID</label>
-            <input
-              type="text"
-              name="userId"
-              id="userId"
-              placeholder="Enter User ID"
-              value={bid.userId}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="bidAmount">Bid Amount</label>
-            <input
-              type="number"
-              name="bidAmount"
-              id="bidAmount"
-              placeholder="Enter Bid Amount"
-              value={bid.bidAmount}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="quantity">Quantity</label>
-            <input
-              type="number"
-              name="quantity"
-              id="quantity"
-              placeholder="Enter Quantity"
-              value={bid.quantity}
-              onChange={handleChange}
-              min="1"
-              required
-            />
-          </div>
-
-          <button type="submit">Submit Bid</button>
+          <input type="text" name="name" placeholder="Product Name" value={product.name} onChange={handleChange} required />
+          <textarea name="description" placeholder="Product Description" value={product.description} onChange={handleChange} required />
+          <input type="number" name="startBidPrice" placeholder="Start Bid Price" value={product.startBidPrice} onChange={handleChange} required />
+          <input type="number" name="buyNowPrice" placeholder="Buy Now Price" value={product.buyNowPrice} onChange={handleChange} required />
+          <select name="category" value={product.category} onChange={handleChange} required>
+            <option value="">Select a category</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="fruits">Fruits</option>
+          </select>
+          <input type="file" name="image" accept="image/*" onChange={handleImageChange} />
+          <button type="submit">{productId ? "Update Product" : "Create Product"}</button>
         </form>
       </div>
     </div>
   );
 };
 
-export default Gig;
+export default Edit;
+
 
 
 

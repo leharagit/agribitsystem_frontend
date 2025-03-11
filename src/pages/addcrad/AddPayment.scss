@@ -1,0 +1,107 @@
+.add-payment-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Payment Header with Card Logos */
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.card-logos {
+  display: flex;
+  gap: 8px;
+}
+
+.card-logos img {
+  width: 50px;
+  height: 30px;
+}
+
+/* Form Styling */
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.expiry-date {
+  display: flex;
+  justify-content: space-between;
+}
+
+.expiry-date select {
+  width: 48%;
+}
+
+.terms {
+  display: flex;
+  align-items: center;
+}
+
+.terms input {
+  margin-right: 10px;
+}
+
+/* Button Styling */
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.continue-btn {
+  background: #007bff;
+  color: white;
+}
+
+.clear-btn {
+  background: #ffc107;
+}
+
+.cancel-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.success {
+  color: green;
+  text-align: center;
+}
+
