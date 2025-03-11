@@ -23,30 +23,13 @@ const GigCard: React.FC<GigCardProps> = ({ item }) => {
         <img
           src={`data:${item.contentType};base64,${item.image}`}
           alt={item.name}
-          className="img-fluid"
-          style={{
-            height: "280px",
-            width: "100%",
-            objectFit: "cover",
-            borderRadius: "8px",
-          }}
         />
         <div className="info">
           <h2 className="product-name">Item: {item.name}</h2>
           <h3 className="product-id">Product ID: {item.productId}</h3>
           <h3 className="product-price">Min Bid Price: LKR{item.startBidPrice}</h3>
           <span className="product-category">Category: {item.category}</span>
-          <h4
-            className={`status ${
-              item.status === "Available"
-                ? "text-success"
-                : item.status === "Sold"
-                ? "text-danger"
-                : "text-warning"
-            }`}
-          >
-            {item.status}
-          </h4>
+          <h4 className={`status ${item.status.toLowerCase()}`}>{item.status}</h4>
           <h3 className="product-quantity">Quantity: {item.quantity}</h3>
           <p className="product-description">
             <strong>Description:</strong> {item.description}
@@ -58,6 +41,7 @@ const GigCard: React.FC<GigCardProps> = ({ item }) => {
 };
 
 export default GigCard;
+
 
 
 

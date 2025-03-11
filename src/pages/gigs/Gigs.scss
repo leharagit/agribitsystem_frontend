@@ -28,6 +28,7 @@
       font-weight: 300;
     }
 
+    /* 🔹 Filters Section */
     .menu {
       display: flex;
       align-items: center;
@@ -114,14 +115,15 @@
       }
     }
 
+    /* 🔹 Product Cards Section */
     .cards {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 15px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      justify-content: center;
     }
 
-    /* ✅ Pagination Styles */
+    /* 🔹 Pagination Styles */
     .pagination {
       display: flex;
       justify-content: center;
@@ -157,4 +159,5 @@
     }
   }
 }
+
 

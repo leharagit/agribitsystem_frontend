@@ -5,14 +5,13 @@ import axios from "axios";
 
 function Gigs() {
   const [sort, setSort] = useState("sales");
-  const [open, setOpen] = useState(false);
   const [data, setData] = useState<GigCardProps["item"][]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1); // ✅ Pagination state
-  const itemsPerPage = 10; // ✅ Number of items per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const [category, setCategory] = useState(""); 
+  const itemsPerPage = 10;
 
-  // ✅ References for min and max bid price inputs
   const minBidRef = useRef<HTMLInputElement>(null);
   const maxBidRef = useRef<HTMLInputElement>(null);
 
@@ -24,10 +23,10 @@ function Gigs() {
       setError(null);
 
       const minBidPrice = minBidRef.current?.value || "0";
-      const maxBidPrice = maxBidRef.current?.value || "100000"; // Default max
+      const maxBidPrice = maxBidRef.current?.value || "100000";
 
       const response = await axios.get(
-        `http://localhost:8080/api/products?startBidPrice=${minBidPrice}&maxBidPrice=${maxBidPrice}&sort=${sort}&page=${currentPage}&limit=${itemsPerPage}`,
+        `http://localhost:8080/api/products?startBidPrice=${minBidPrice}&maxBidPrice=${maxBidPrice}&category=${category}&sort=${sort}&page=${currentPage}&limit=${itemsPerPage}`,
         {
           headers: {
             "Current-User-ID": currentUser.id || "",
@@ -42,19 +41,14 @@ function Gigs() {
     }
   };
 
-  const reSort = (type: string) => {
-    setSort(type);
-    setOpen(false);
-  };
-
   const applyFilters = () => {
-    setCurrentPage(1); // ✅ Reset to first page on new filter
+    setCurrentPage(1);
     fetchData();
   };
 
   useEffect(() => {
     fetchData();
-  }, [sort, currentPage]); // ✅ Refetch on page change
+  }, [sort, currentPage, category]); 
 
   return (
     <div className="gigs">
@@ -62,40 +56,32 @@ function Gigs() {
         <h1>Products</h1>
         <p>Explore our collection of products available for bidding!</p>
 
-        {/* ✅ Min & Max Bid Price Filter */}
+        {/* Filters Section */}
         <div className="menu">
           <div className="left">
             <span>Min Bid Price</span>
             <input ref={minBidRef} type="number" placeholder="Enter Min Bid Price" />
             <span>Max Bid Price</span>
             <input ref={maxBidRef} type="number" placeholder="Enter Max Bid Price" />
-            <button onClick={applyFilters}>Apply</button>
           </div>
-          <div className="right">
-            <span className="sortBy">Sort by</span>
-            <span className="sortType">
-              {sort === "sales" ? "Best Selling" : "Newest"}
-            </span>
-            <img
-              src="./img/down.png"
-              alt="Toggle sort menu"
-              onClick={() => setOpen(!open)}
-              className="toggleSortMenu"
-            />
-            {open && (
-              <div className="rightMenu">
-                {sort !== "createdAt" && (
-                  <span onClick={() => reSort("createdAt")}>Newest</span>
-                )}
-                {sort !== "sales" && (
-                  <span onClick={() => reSort("sales")}>Best Selling</span>
-                )}
-              </div>
-            )}
+
+          {/* Category Filter Dropdown */}
+          <div className="left">
+            <span>Category</span>
+            <select value={category} onChange={(e) => setCategory(e.target.value)}>
+              <option value="">All Categories</option>
+              <option value="vegetables">Vegetables</option>
+              <option value="fruits">Fruits</option>
+              <option value="coconuts">Coconuts</option>
+              <option value="fish">Fish</option>
+              <option value="meat">Meat</option>
+            </select>
           </div>
+
+          <button onClick={applyFilters}>Apply</button>
         </div>
 
-        {/* ✅ Product Listings */}
+        {/* Product Listings */}
         <div className="cards">
           {isLoading && <span>Loading...</span>}
           {error && <span className="error">Error: {error}</span>}
@@ -106,7 +92,7 @@ function Gigs() {
           )}
         </div>
 
-        {/* ✅ Pagination Controls */}
+        {/* Pagination Controls */}
         <div className="pagination">
           <button
             className="btn btn-secondary"
@@ -129,6 +115,7 @@ function Gigs() {
 }
 
 export default Gigs;
+
 
 
 
