@@ -110,6 +110,7 @@ const Register = () => {
         <input
           type="text"
           name="phoneNumber"
+          maxLength={10} 
           placeholder="Enter your phone number"
           value={user.phoneNumber}
           onChange={handleChange}
