@@ -1,104 +1,220 @@
 .gigCard {
-  width: 324px;
-  height: 640px;
-  border: 1px solid rgba(228, 228, 228, 0.8);
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background-color: #ffffff;
   border-radius: 12px;
   overflow: hidden;
-  background-color: #fff;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-   
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 25px;
+  position: relative;
+  width: 300px; // Fixed width
+  height: 480px; // Fixed overall height
+  
   &:hover {
-    transform: translateY(-12px) rotate(-1deg);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    border-color: #0073e6;
-  }
-   
-  img {
-    width: 100%;
-    height: 50%;
-    object-fit: cover;
-    border-bottom: 2px solid rgba(228, 228, 228, 0.8);
-    transition: transform 0.4s ease, border-color 0.3s ease;
-     
-    &:hover {
-      transform: scale(1.08);
-      border-color: #0073e6;
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    
+    &::before {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+    
+    img {
+      transform: scale(1.05);
     }
   }
-   
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    transition: transform 0.4s ease;
+    opacity: 0;
+    z-index: 1;
+  }
+  
+  img {
+    transition: transform 0.5s ease;
+    height: 200px; // Fixed height for image
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
   .info {
-    padding: 20px;
+    padding: 15px;
+    position: relative;
+    height: 280px; // Fixed height for content
+    overflow: hidden; // Prevent content overflow
     display: flex;
     flex-direction: column;
-    gap: 10px;
-     
-    h2 {
-      font-size: 20px;
-      color: #222;
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    
+    .product-name {
+      font-size: 1.2rem;
       font-weight: 700;
-      text-transform: capitalize;
-    }
-     
-    p {
-      font-size: 15px;
-      color: #555;
-      line-height: 1.6;
-      margin: 0;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
+      margin-bottom: 6px;
+      color: #1f2937;
       overflow: hidden;
       text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
     }
-     
-    span {
-      font-size: 18px;
-      color: #114109;
+    
+    .product-id {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: #6b7280;
+      margin-bottom: 8px;
+      font-family: monospace;
+    }
+    
+    .product-price {
+      font-size: 1.1rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      color: #3b82f6;
+      margin-bottom: 10px;
+      position: relative;
+      padding-bottom: 10px;
+      
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background-color: #e5e7eb;
+      }
+    }
+    
+    .product-category {
+      display: inline-block;
+      font-size: 0.8rem;
+      background-color: #f3f4f6;
+      padding: 3px 8px;
+      border-radius: 20px;
+      color: #4b5563;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .status {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      
+      &.text-success {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      
+      &.text-danger {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      
+      &.text-warning {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+      }
+    }
+    
+    .product-quantity {
+      font-size: 0.85rem;
+      color: #4b5563;
+      margin-bottom: 8px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #9ca3af;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+    }
+    
+    .product-description {
+      font-size: 0.85rem;
+      color: #6b7280;
+      line-height: 1.4;
+      margin-top: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      flex-grow: 1;
+      
+      strong {
+        color: #4b5563;
+        font-weight: 600;
+      }
     }
   }
-   
-  .detail {
-    padding: 15px 20px;
-    background: linear-gradient(90deg, #09381c, #305609);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-     
-    .price {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-       
-      span {
-        font-size: 14px;
-        color: #cfcfcf;
-      }
-       
-      h2 {
-        font-size: 18px;
-        font-weight: 800;
-        color: #fff;
+  
+  // Container for multiple cards
+  &-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px); // Match fixed card width
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    width: 280px; // Slightly smaller on tablets
+    height: 460px;
+    
+    img {
+      height: 180px;
+    }
+    
+    .info {
+      height: 280px;
+      
+      .product-name {
+        font-size: 1.1rem;
       }
     }
-     
+  }
+  
+  @media (max-width: 480px) {
+    width: 260px; // Even smaller on mobile
+    height: 440px;
+    
     img {
-      width: 25px;
-      height: 15px;
-      object-fit: contain;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-       
-      &:hover {
-        transform: scale(1.2) rotate(5deg);
+      height: 160px;
+    }
+    
+    .info {
+      height: 280px;
+      padding: 12px;
+      
+      .product-name {
+        font-size: 1rem;
+      }
+      
+      .product-price {
+        font-size: 1rem;
       }
     }
   }

@@ -68,7 +68,7 @@ const Pay: React.FC = () => {
             value="card" 
             checked={selectedPaymentMethod === "card"} 
             onChange={handlePaymentMethodChange} 
-          /> Card Payment (Stripe)
+          /> Credit Card Payment (Stripe)
         </label>
 
         <label>
@@ -97,20 +97,16 @@ const Pay: React.FC = () => {
         </Elements>
       )}
 
-      {selectedPaymentMethod === "bank" && (
-        <BankTransferInstructions />
-      )}
+      {selectedPaymentMethod === "bank" && <BankTransferInstructions />}
 
-      {selectedPaymentMethod === "cod" && (
-        <CashOnDeliveryConfirmation />
-      )}
+      {selectedPaymentMethod === "cod" && <CashOnDeliveryConfirmation />}
     </div>
   );
 };
 
 export default Pay;
 
-/* ✅ CheckoutForm for Card Payment */
+/* ✅ CheckoutForm for Credit Card Payment */
 interface CheckoutFormProps {
   clientSecret: string;
 }
@@ -194,4 +190,3 @@ const CashOnDeliveryConfirmation: React.FC = () => {
     </div>
   );
 };
-
