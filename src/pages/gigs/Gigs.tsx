@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./Gigs.scss";
 import GigCard, { type GigCardProps } from "../../components/gigCard/GigCard";
 import axios from "axios";
 
 function Gigs() {
   const [sort, setSort] = useState("sales");
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState<GigCardProps["item"][]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -14,8 +16,15 @@ function Gigs() {
 
   const minBidRef = useRef<HTMLInputElement>(null);
   const maxBidRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    setCategory(params.get("category") || "");
+    fetchData();
+  }, [location.search, sort, currentPage, category]); 
 
   const fetchData = async () => {
     try {
@@ -46,14 +55,10 @@ function Gigs() {
     fetchData();
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [sort, currentPage, category]); 
-
   return (
     <div className="gigs">
       <div className="container">
-        <h1>Products</h1>
+        <h1>Products {category ? `in ${category}` : ""}</h1>
         <p>Explore our collection of products available for bidding!</p>
 
         {/* Filters Section */}
@@ -78,7 +83,9 @@ function Gigs() {
             </select>
           </div>
 
-          <button onClick={applyFilters}>Apply</button>
+          <button className="apply-button" onClick={applyFilters}>Apply</button>
+          
+
         </div>
 
         {/* Product Listings */}
