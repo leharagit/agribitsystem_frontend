@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Gigs.scss";
-import GigCard, { type GigCardProps } from "../../components/gigCard/GigCard"; // Import GigCardProps as a type
+import GigCard, { type GigCardProps } from "../../components/gigCard/GigCard";
 import axios from "axios";
 
 function Gigs() {
   const [sort, setSort] = useState("sales");
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<GigCardProps["item"][]>([]); // Correct type usage
+  const [data, setData] = useState<GigCardProps["item"][]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const minRef = useRef<HTMLInputElement>(null);
-  const maxRef = useRef<HTMLInputElement>(null);
+
+  // ✅ References for min and max bid price inputs
+  const minBidRef = useRef<HTMLInputElement>(null);
+  const maxBidRef = useRef<HTMLInputElement>(null);
 
   const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
 
@@ -18,11 +20,12 @@ function Gigs() {
     try {
       setIsLoading(true);
       setError(null);
-      const min = minRef.current?.value || "0";
-      const max = maxRef.current?.value || "10000";
+      
+      const minBidPrice = minBidRef.current?.value || "0";
+      const maxBidPrice = maxBidRef.current?.value || "100000"; // Default max
 
       const response = await axios.get(
-        `http://localhost:8080/api/products?min=${min}&max=${max}&sort=${sort}`,
+        `http://localhost:8080/api/products?startBidPrice=${minBidPrice}&maxBidPrice=${maxBidPrice}&sort=${sort}`,
         {
           headers: {
             "Current-User-ID": currentUser.id || "",
@@ -51,15 +54,16 @@ function Gigs() {
   return (
     <div className="gigs">
       <div className="container">
-      
         <h1>Products</h1>
-        <p>Explore our collection of products available for you!</p>
+        <p>Explore our collection of products available for bidding!</p>
 
+        {/* ✅ Min & Max Bid Price Filter */}
         <div className="menu">
           <div className="left">
-            <span>Budget</span>
-            <input ref={minRef} type="number" placeholder="Min" />
-            <input ref={maxRef} type="number" placeholder="Max" />
+            <span>Min Bid Price</span>
+            <input ref={minBidRef} type="number" placeholder="Enter Min Bid Price" />
+            <span>Max Bid Price</span>
+            <input ref={maxBidRef} type="number" placeholder="Enter Max Bid Price" />
             <button onClick={applyFilters}>Apply</button>
           </div>
           <div className="right">
@@ -86,6 +90,7 @@ function Gigs() {
           </div>
         </div>
 
+        {/* ✅ Product Listings */}
         <div className="cards">
           {isLoading && <span>Loading...</span>}
           {error && <span className="error">Error: {error}</span>}
@@ -101,6 +106,8 @@ function Gigs() {
 }
 
 export default Gigs;
+
+
 
 
 
