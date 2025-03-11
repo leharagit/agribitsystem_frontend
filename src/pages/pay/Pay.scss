@@ -1,3 +1,180 @@
-.pay{
-
- }
+.pay {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+    h2 {
+      color: #333;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+  
+    p {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      
+      &.text-danger {
+        color: #dc3545;
+      }
+      
+      &.text-success {
+        color: #28a745;
+      }
+    }
+  
+    // Payment Options
+    .payment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 6px;
+  
+      label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+  
+        &:hover {
+          background-color: #e9ecef;
+        }
+  
+        input[type="radio"] {
+          margin-right: 10px;
+          cursor: pointer;
+        }
+      }
+    }
+  
+    // Stripe Card Element
+    .StripeElement {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      background-color: #fff;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(50, 50, 93, 0.15);
+      
+      &--focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+      
+      &--invalid {
+        border-color: #dc3545;
+      }
+    }
+  
+    // Button Styles
+    button {
+      display: inline-block;
+      font-weight: 500;
+      color: #fff;
+      text-align: center;
+      vertical-align: middle;
+      user-select: none;
+      background-color: #007bff;
+      border: 1px solid #007bff;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 0.25rem;
+      transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+      cursor: pointer;
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 200px;
+      
+      &:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+      }
+      
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+      
+      &.btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        
+        &:hover {
+          background-color: #0069d9;
+          border-color: #0062cc;
+        }
+      }
+    }
+  
+    // Bank Transfer Section
+    .bank-transfer, .cash-on-delivery {
+      background-color: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      
+      h3 {
+        color: #333;
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+      }
+      
+      p {
+        margin-bottom: 0.75rem;
+        
+        strong {
+          font-weight: 600;
+        }
+      }
+    }
+  
+    // Alerts
+    .alert {
+      position: relative;
+      padding: 0.75rem 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+      
+      &.alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      
+      &.alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+      }
+    }
+  
+    // Responsive styles
+    @media (max-width: 768px) {
+      padding: 1.5rem;
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .payment-options {
+        padding: 0.75rem;
+      }
+      
+      button {
+        width: 100%;
+        max-width: none;
+      }
+    }
+  }

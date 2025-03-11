@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./Register.scss"; // Add styling in a separate CSS/SCSS file.
+import "./Register.scss"; // Styling file
 
 const Register = () => {
   const [user, setUser] = useState({
@@ -17,12 +17,12 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Validation function
+  // ✅ Validation function
   const validateForm = () => {
     let newErrors: { [key: string]: string } = {};
 
     if (!user.name.trim()) newErrors.name = "Full name is required";
-    
+
     if (!user.userEmail.trim()) {
       newErrors.userEmail = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.userEmail)) {
@@ -37,8 +37,8 @@ const Register = () => {
 
     if (!user.phoneNumber.trim()) {
       newErrors.phoneNumber = "Phone number is required";
-    } else if (!/^\d{10,}$/.test(user.phoneNumber)) {
-      newErrors.phoneNumber = "Phone number must be at least 10 digits";
+    } else if (!/^\d{10}$/.test(user.phoneNumber)) {
+      newErrors.phoneNumber = "Phone number must be exactly 10 digits";
     }
 
     if (!user.userRole) newErrors.userRole = "Please select a role";
@@ -49,23 +49,25 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // ✅ Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setUser({ ...user, [e.target.name]: e.target.value });
-
-    // Clear error when user starts typing
-    setErrors({ ...errors, [e.target.name]: "" });
+    setErrors({ ...errors, [e.target.name]: "" }); // Clear error when user types
   };
 
+  // ✅ Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
     try {
-      await axios.post("http://localhost:8080/user/register", user);
+      await axios.post("http://localhost:8080/user/register", user, {
+        headers: { "Content-Type": "application/json" },
+      });
       navigate("/login");
-    } catch (err) {
-      setErrorMessage("Registration failed. Please try again.");
+    } catch (err: any) {
+      setErrorMessage(err.response?.data || "Registration failed. Please try again.");
     }
   };
 
@@ -141,6 +143,7 @@ const Register = () => {
 };
 
 export default Register;
+
 
 
 

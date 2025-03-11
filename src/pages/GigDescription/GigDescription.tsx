@@ -15,6 +15,7 @@ interface Product {
 }
 
 interface Bid {
+  id: string;
   productId: string;
   userId: string;
   phoneNumber: string;
@@ -35,6 +36,7 @@ function GigDescription() {
   const userId = localStorage.getItem("userId") || "";
 
   const [bid, setBid] = useState<Bid>({
+    id: "",
     productId: productId || "",
     userId: userId, // ✅ Automatically use logged-in user ID
     phoneNumber: "",
@@ -131,6 +133,7 @@ function GigDescription() {
         setBids(updatedBidsResponse.data);
 
         setBid({
+          id: "",
           productId: productId || "",
           userId: userId,
           phoneNumber: "",
@@ -170,17 +173,6 @@ function GigDescription() {
             <h2 className="section-title">Create a New Bid</h2>
             <form onSubmit={handleSubmit} className="bid-form">
               <div className="form-group">
-                <label htmlFor="userId">User ID (Auto-filled)</label>
-                <input
-                  type="text"
-                  name="userId"
-                  id="userId"
-                  value={bid.userId}
-                  disabled
-                />
-              </div>
-
-              <div className="form-group">
                 <label htmlFor="phoneNumber">Enter Your Phone Number</label>
                 <input
                   type="tel"
@@ -210,23 +202,37 @@ function GigDescription() {
                 />
               </div>
 
-              <div className="form-group">
-                <label htmlFor="quantity">Quantity</label>
-                <input
-                  type="number"
-                  name="quantity"
-                  id="quantity"
-                  placeholder="Enter Quantity"
-                  value={bid.quantity || ''}
-                  onChange={handleChange}
-                  min="1"
-                  max={product.quantity}
-                  required
-                />
-              </div>
-
               <button type="submit" className="submit-button">Submit Bid</button>
             </form>
+          </div>
+
+          {/* ✅ Existing Bids Display Section */}
+          <div className="existing-bids">
+            <h2 className="section-title">Existing Bids</h2>
+            {bids.length > 0 ? (
+              <table className="table table-hover table-striped">
+                <thead className="table-dark">
+                  <tr>
+                    <th>User ID</th>
+                    <th>Phone Number</th>
+                    <th>Bid Amount (LKR)</th>
+                    <th>Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bids.map((b) => (
+                    <tr key={b.id}>
+                      <td>{b.userId}</td>
+                      <td>{b.phoneNumber}</td>
+                      <td>LKR {b.bidAmount}</td>
+                      <td>{b.quantity}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No bids yet.</p>
+            )}
           </div>
         </>
       ) : (
@@ -237,5 +243,4 @@ function GigDescription() {
 }
 
 export default GigDescription;
-
 
