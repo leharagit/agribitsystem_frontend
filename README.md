@@ -1,4 +1,4 @@
-#  Online Agricultural Product Auction Platform frontend 
+#  Online Agricultural Product Auction Platform frontend      
 
 
 
